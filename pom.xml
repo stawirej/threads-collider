@@ -51,16 +51,16 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spotless.version>2.36.0</spotless.version>
-    <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-    <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+    <spotless.version>2.40.0</spotless.version>
+    <maven.surefire.plugin.version>3.1.2</maven.surefire.plugin.version>
+    <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
     <maven.jar.plugin.version>3.3.0</maven.jar.plugin.version>
-    <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-    <maven.javadoc.plugin.version>3.4.1</maven.javadoc.plugin.version>
-    <maven.gpg.plugin.version>3.0.1</maven.gpg.plugin.version>
+    <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
+    <maven.javadoc.plugin.version>3.6.0</maven.javadoc.plugin.version>
+    <maven.gpg.plugin.version>3.1.0</maven.gpg.plugin.version>
     <assertj.core.version>3.24.2</assertj.core.version>
-    <junit.version>5.9.2</junit.version>
-    <archunit.version>1.0.1</archunit.version>
+    <junit.version>5.10.0</junit.version>
+    <archunit.version>1.1.0</archunit.version>
     <java.version>11</java.version>
   </properties>
 
@@ -204,7 +204,7 @@
               <on>@formatter:on</on>
             </toggleOffOn>
             <googleJavaFormat>
-              <version>1.16.0</version>
+              <version>1.18.1</version>
             </googleJavaFormat>
             <removeUnusedImports></removeUnusedImports>
           </java>
