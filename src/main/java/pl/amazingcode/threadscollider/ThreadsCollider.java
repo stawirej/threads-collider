@@ -6,33 +6,39 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+/** Allows to execute given code by all threads at the same time. */
 public final class ThreadsCollider implements AutoCloseable {
 
   private static final long DEFAULT_TIMEOUT = 60;
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
   private final ExecutorService executor;
-  private final long threadCount;
+  private final long threadsCount;
   private final AtomicLong startedThreadsCount = new AtomicLong(0);
   private final AtomicBoolean spinLock;
   private final long timeout;
   private final TimeUnit timeUnit;
 
-  private ThreadsCollider(int threadCount, long timeout, TimeUnit timeUnit) {
+  private ThreadsCollider(int threadsCount, long timeout, TimeUnit timeUnit) {
 
-    this.executor = Executors.newFixedThreadPool(threadCount);
+    this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
-    this.threadCount = threadCount;
+    this.threadsCount = threadsCount;
     this.timeout = timeout;
     this.timeUnit = timeUnit;
   }
 
+  /**
+   * Tries to execute given code by all threads at the same time.
+   *
+   * @param runnable - code to be executed by each thread.
+   */
   public void collide(Runnable runnable) {
 
-    for (long i = 0; i < threadCount; i++) {
+    for (long i = 0; i < threadsCount; i++) {
       executor.execute(() -> decorate(runnable));
     }
 
-    while (startedThreadsCount.get() != threadCount)
+    while (startedThreadsCount.get() != threadsCount)
       ;
     spinLock.set(false);
   }
@@ -41,13 +47,14 @@ public final class ThreadsCollider implements AutoCloseable {
 
     startedThreadsCount.incrementAndGet();
 
-    while (startedThreadsCount.get() != threadCount) {
+    while (startedThreadsCount.get() != threadsCount) {
       while (spinLock.get())
         ;
       runnable.run();
     }
   }
 
+  /** Shuts down the executor service and waits for all threads to finish by given timeout. */
   @Override
   public void close() {
     try {
@@ -58,27 +65,35 @@ public final class ThreadsCollider implements AutoCloseable {
     }
   }
 
+  /** Builder for {@link ThreadsCollider}. */
   public static class ThreadsColliderBuilder
       implements ThreadsCountBuilder, TimeoutBuilder, TimeUnitBuilder, Builder {
 
-    private int threadCount;
+    private int threadsCount;
     private long timeout = DEFAULT_TIMEOUT;
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
 
+    private ThreadsColliderBuilder() {}
+
+    /**
+     * Creates new instance of {@link ThreadsColliderBuilder} with default values.
+     *
+     * @return new instance of {@link ThreadsColliderBuilder}
+     */
     public static ThreadsCountBuilder threadsCollider() {
 
       return new ThreadsColliderBuilder();
     }
 
-    public TimeoutBuilder withThreadsCount(int threadCount) {
+    public TimeoutBuilder withThreadsCount(int threadsCount) {
 
-      this.threadCount = threadCount;
+      this.threadsCount = threadsCount;
       return this;
     }
 
     public TimeoutBuilder withAvailableProcessors() {
 
-      this.threadCount = Runtime.getRuntime().availableProcessors();
+      this.threadsCount = Runtime.getRuntime().availableProcessors();
       return this;
     }
 
@@ -139,7 +154,7 @@ public final class ThreadsCollider implements AutoCloseable {
 
     public ThreadsCollider build() {
 
-      return new ThreadsCollider(threadCount, timeout, timeUnit);
+      return new ThreadsCollider(threadsCount, timeout, timeUnit);
     }
   }
 }
