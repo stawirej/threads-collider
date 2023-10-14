@@ -7,7 +7,7 @@ to manifest concurrency issues.
 
 ```java
 @RepeatedTest(10)
-void Thread_safe_adding_to_list(){
+void Thread_safe_adding_to_list() {
     // Given
     List<String> list = new ArrayList<>();    // <-- NOT thread safe
     int threadsCount = Runtime.getRuntime().availableProcessors();
@@ -44,7 +44,7 @@ but the following element(s) were unexpected:
 
 ```java
 @RepeatedTest(10)
-void Thread_safe_adding_to_list(){
+void Thread_safe_adding_to_list() {
     // Given
     List<String> list = Collections.synchronizedList(new ArrayList<>()); // <-- thread safe
     int threadsCount = Runtime.getRuntime().availableProcessors();
@@ -68,9 +68,9 @@ void Thread_safe_adding_to_list(){
 
 ```java
 @RepeatedTest(10)                             // run test multiple times to increase chance of manifesting concurrency issues
-void Adding_unique_apples_is_thread_safe(){
+void Adding_unique_apples_is_thread_safe() {
     // Given
-    UniqueApples uniqueApples=UniqueApples.newInstance();
+    UniqueApples uniqueApples = UniqueApples.newInstance();
 
     // When
     try (ThreadsCollider threadsCollider =    // use try-with-resources to automatically shutdown threads collider
