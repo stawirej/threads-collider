@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /** Allows to execute given code by all threads at the "same time". */
 public final class ThreadsCollider implements AutoCloseable {
@@ -13,7 +13,7 @@ public final class ThreadsCollider implements AutoCloseable {
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
   private final ExecutorService executor;
   private final long threadsCount;
-  private final AtomicLong startedThreadsCount = new AtomicLong(0);
+  private final AtomicInteger startedThreadsCount = new AtomicInteger(0);
   private final AtomicBoolean spinLock;
   private final long timeout;
   private final TimeUnit timeUnit;
@@ -34,7 +34,7 @@ public final class ThreadsCollider implements AutoCloseable {
    */
   public void collide(Runnable runnable) {
 
-    for (long i = 0; i < threadsCount; i++) {
+    for (int i = 0; i < threadsCount; i++) {
       executor.execute(() -> decorate(runnable));
     }
 
