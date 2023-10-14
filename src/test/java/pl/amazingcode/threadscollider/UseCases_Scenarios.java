@@ -16,7 +16,7 @@ import org.junit.jupiter.api.RepeatedTest;
 final class UseCases_Scenarios {
 
   @RepeatedTest(10)
-  void Synchronize_adding_to_set() {
+  void Thread_safe_adding_to_set() {
     // Given
     Set<String> set = Collections.synchronizedSet(new HashSet<>());
 
@@ -30,7 +30,7 @@ final class UseCases_Scenarios {
   }
 
   @RepeatedTest(10)
-  void Synchronize_adding_to_list() {
+  void Thread_safe_adding_to_list() {
     // Given
     List<String> list = Collections.synchronizedList(new ArrayList<>());
     int threadsCount = Runtime.getRuntime().availableProcessors();
