@@ -16,10 +16,10 @@ final class ThreadsCollider_Scenarios {
   @RepeatedTest(100)
   void Build_threads_collider_with_user_defined_threads_count() {
     // Given
-    var uniqueApples = UniqueApples.newInstance();
+    UniqueApples uniqueApples = UniqueApples.newInstance();
 
     // When
-    try (var threadsCollider = threadsCollider().withThreadsCount(10).build()) {
+    try (ThreadsCollider threadsCollider = threadsCollider().withThreadsCount(10).build()) {
       threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
     }
 
@@ -30,10 +30,10 @@ final class ThreadsCollider_Scenarios {
   @RepeatedTest(100)
   void Build_threads_collider_with_available_processors() {
     // Given
-    var uniqueApples = UniqueApples.newInstance();
+    UniqueApples uniqueApples = UniqueApples.newInstance();
 
     // When
-    try (var threadsCollider = threadsCollider().withAvailableProcessors().build()) {
+    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
       threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
     }
 
@@ -47,10 +47,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_nanoseconds() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1_000_000)
@@ -66,10 +66,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_microseconds() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1_000)
@@ -85,10 +85,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_milliseconds() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1)
@@ -104,10 +104,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_seconds() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1)
@@ -123,10 +123,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_minutes() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1)
@@ -142,10 +142,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_hours() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1)
@@ -161,10 +161,10 @@ final class ThreadsCollider_Scenarios {
     @RepeatedTest(100)
     void as_days() {
       // Given
-      var uniqueApples = UniqueApples.newInstance();
+      UniqueApples uniqueApples = UniqueApples.newInstance();
 
       // When
-      try (var threadsCollider =
+      try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAvailableProcessors()
               .withAwaitTerminationTimeout(1)

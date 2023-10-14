@@ -28,7 +28,7 @@ public final class ThreadsCollider implements AutoCloseable {
 
   public void collide(Runnable runnable) {
 
-    for (var i = 0; i < threadCount; i++) {
+    for (long i = 0; i < threadCount; i++) {
       executor.execute(() -> decorate(runnable));
     }
 

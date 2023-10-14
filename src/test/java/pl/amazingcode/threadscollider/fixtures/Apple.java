@@ -14,7 +14,7 @@ public class Apple {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    final var apple = (Apple) o;
+    final Apple apple = (Apple) o;
     return Objects.equals(name, apple.name);
   }
 
