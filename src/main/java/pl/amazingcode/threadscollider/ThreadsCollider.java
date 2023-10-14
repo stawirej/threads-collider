@@ -12,7 +12,7 @@ public final class ThreadsCollider implements AutoCloseable {
   private static final long DEFAULT_TIMEOUT = 60;
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
   private final ExecutorService executor;
-  private final long threadsCount;
+  private final int threadsCount;
   private final AtomicInteger startedThreadsCount = new AtomicInteger(0);
   private final AtomicBoolean spinLock;
   private final long timeout;
@@ -38,8 +38,9 @@ public final class ThreadsCollider implements AutoCloseable {
       executor.execute(() -> decorate(runnable));
     }
 
-    while (startedThreadsCount.get() != threadsCount)
+    while (startedThreadsCount.get() < threadsCount)
       ;
+
     spinLock.set(false);
   }
 
@@ -47,21 +48,26 @@ public final class ThreadsCollider implements AutoCloseable {
 
     startedThreadsCount.incrementAndGet();
 
-    while (startedThreadsCount.get() != threadsCount) {
-      while (spinLock.get())
-        ;
-      runnable.run();
-    }
+    while (startedThreadsCount.get() < threadsCount)
+      ;
+
+    while (spinLock.get())
+      ;
+
+    runnable.run();
   }
 
   /** Shuts down the executor service and waits for all threads to finish by given timeout. */
   @Override
   public void close() {
+
     try {
+      executor.shutdown();
+      if (!executor.awaitTermination(timeout, timeUnit)) {
+        executor.shutdownNow();
+      }
+    } catch (InterruptedException e) {
       executor.shutdownNow();
-      executor.awaitTermination(timeout, timeUnit);
-    } catch (Exception e) {
-      // Intentionally left blank
     }
   }
 

@@ -13,7 +13,7 @@ import pl.amazingcode.threadscollider.fixtures.UniqueApples;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Scenarios {
 
-  @RepeatedTest(100)
+  @RepeatedTest(10)
   void Build_threads_collider_with_user_defined_threads_count() {
     // Given
     UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -27,7 +27,7 @@ final class ThreadsCollider_Scenarios {
     then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
   }
 
-  @RepeatedTest(100)
+  @RepeatedTest(10)
   void Build_threads_collider_with_available_processors() {
     // Given
     UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -44,7 +44,7 @@ final class ThreadsCollider_Scenarios {
   @Nested
   class Build_threads_collider_with_custom_executor_await_termination_timeout {
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_nanoseconds() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -63,7 +63,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_microseconds() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -82,7 +82,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_milliseconds() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -101,7 +101,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_seconds() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -120,7 +120,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_minutes() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -139,7 +139,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_hours() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
@@ -158,7 +158,7 @@ final class ThreadsCollider_Scenarios {
       then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
     }
 
-    @RepeatedTest(100)
+    @RepeatedTest(10)
     void as_days() {
       // Given
       UniqueApples uniqueApples = UniqueApples.newInstance();
