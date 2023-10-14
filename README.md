@@ -16,7 +16,7 @@ void Thread_safe_adding_to_list(){
     try (ThreadsCollider threadsCollider =
         threadsCollider().withThreadsCount(threadsCount).build()) {
         
-        threadsCollider.collide(()->list.add("bar"));
+        threadsCollider.collide(() -> list.add("bar"));
     }
 
     // Then
@@ -53,7 +53,7 @@ void Thread_safe_adding_to_list(){
     try (ThreadsCollider threadsCollider = 
         threadsCollider().withThreadsCount(threadsCount).build()) {
         
-        threadsCollider.collide(()->list.add("bar"));
+        threadsCollider.collide(() -> list.add("bar"));
     }
 
     // Then
@@ -80,7 +80,7 @@ void Adding_unique_apples_is_thread_safe(){
             .asSeconds()                      // optional - related only to "withAwaitTerminationTimeout()", default TimeUnit.SECONDS
             .build()) {
         
-        threadsCollider.collide(()->uniqueApples.add(RED_DELICIOUS)); // <-- code to be executed simultaneously at "exactly" same moment
+        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS)); // <-- code to be executed simultaneously at "exactly" same moment
     }
 
     // Then
@@ -89,7 +89,7 @@ void Adding_unique_apples_is_thread_safe(){
 ```
 
 ## Requirements
-
+[build.yml](.github%2Fworkflows%2Fbuild.yml)
 - Java 8+
 
 ## Dependencies
