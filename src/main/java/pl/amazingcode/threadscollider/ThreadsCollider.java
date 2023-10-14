@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-/** Allows to execute given code by all threads at the same time. */
+/** Allows to execute given code by all threads at the "same time". */
 public final class ThreadsCollider implements AutoCloseable {
 
   private static final long DEFAULT_TIMEOUT = 60;
@@ -28,7 +28,7 @@ public final class ThreadsCollider implements AutoCloseable {
   }
 
   /**
-   * Tries to execute given code by all threads at the same time.
+   * Tries to execute given code by all threads at the "same time".
    *
    * @param runnable - code to be executed by each thread.
    */
