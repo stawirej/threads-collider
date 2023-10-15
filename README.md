@@ -16,7 +16,7 @@ void Thread_safe_adding_to_list() {
     try (ThreadsCollider threadsCollider =
         threadsCollider().withThreadsCount(threadsCount).build()) {
         
-        threadsCollider.collide(() -> list.add("bar"));
+        threadsCollider.collide(() -> list.add("bar")); // add "bar" to list multiple times simultaneously
     }
 
     // Then
@@ -104,11 +104,12 @@ void Adding_unique_apples_is_thread_safe() {
     <groupId>pl.amazingcode</groupId>
     <artifactId>threads-collider</artifactId>
     <version>1.0.0</version>
+    <scope>test</scope>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.0"
+testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.0"
 ```
