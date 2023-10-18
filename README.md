@@ -88,8 +88,13 @@ void Adding_unique_apples_is_thread_safe() {
 }
 ```
 
+#### Detailed examples: 
+
+- [ThreadsCollider_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2FThreadsCollider_Scenarios.java)
+- [UseCases_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2FUseCases_Scenarios.java)
+
 ## Requirements
-[build.yml](.github%2Fworkflows%2Fbuild.yml)
+
 - Java 8+
 
 ## Dependencies
