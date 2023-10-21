@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
@@ -43,5 +45,33 @@ final class UseCases_Scenarios {
 
     // Then
     then(list).hasSize(threadsCount).containsOnly("bar");
+  }
+
+  @RepeatedTest(10)
+  void Thread_safe_adding_to_map() {
+    // Given
+    Map<String, String> map = new ConcurrentHashMap<>();
+
+    // When
+    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
+      threadsCollider.collide(() -> map.put("foo", "bar"));
+    }
+
+    // Then
+    then(map).hasSize(1).containsEntry("foo", "bar");
+  }
+
+  @RepeatedTest(10)
+  void Thread_safe_adding_to_map_when_absent() {
+    // Given
+    Map<String, String> map = new ConcurrentHashMap<>();
+
+    // When
+    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
+      threadsCollider.collide(() -> map.putIfAbsent("foo", "bar"));
+    }
+
+    // Then
+    then(map).hasSize(1).containsEntry("foo", "bar");
   }
 }
