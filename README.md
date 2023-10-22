@@ -110,7 +110,7 @@ void Adding_unique_apples_is_thread_safe() {
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>threads-collider</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -118,5 +118,5 @@ void Adding_unique_apples_is_thread_safe() {
 ### Gradle
 
 ```groovy
-testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.0"
+testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.1"
 ```
