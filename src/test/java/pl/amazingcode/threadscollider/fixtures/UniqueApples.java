@@ -18,12 +18,23 @@ public final class UniqueApples implements Iterable<Apple> {
     return new UniqueApples();
   }
 
-  // Remove synchronized keyword to see the tests fail
   public synchronized void add(Apple apple) {
 
     if (!uniqueApples.contains(apple)) {
       uniqueApples.add(apple);
     }
+  }
+
+  public void addUnSynchronized(Apple apple) {
+
+    if (!uniqueApples.contains(apple)) {
+      uniqueApples.add(apple);
+    }
+  }
+
+  public int size() {
+
+    return uniqueApples.size();
   }
 
   @Override
