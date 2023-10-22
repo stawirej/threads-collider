@@ -1,6 +1,5 @@
 package pl.amazingcode.threadscollider;
 
-import static org.assertj.core.api.BDDAssertions.then;
 import static pl.amazingcode.threadscollider.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
@@ -89,25 +88,5 @@ final class UseCases_Negative_Scenarios {
 
     // Then
     collisionsAssert.assertTrue(testName, map.size() != 1);
-  }
-
-  @RepeatedTest(TEST_REPETITIONS)
-  void Log_failed_threads_exceptions() {
-    // Given
-    Runnable failingRunnable =
-        () -> {
-          throw new IllegalStateException("message");
-        };
-    int threadsCount = 10;
-
-    // When
-    try (ThreadsCollider threadsCollider =
-        threadsCollider().withThreadsCount(threadsCount).build()) {
-
-      threadsCollider.collide(failingRunnable);
-
-      // Then
-      then(threadsCollider.exceptions()).hasSize(threadsCount);
-    }
   }
 }

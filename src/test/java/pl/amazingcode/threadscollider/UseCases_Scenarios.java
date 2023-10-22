@@ -82,16 +82,38 @@ final class UseCases_Scenarios {
         () -> {
           throw new IllegalStateException("message");
         };
+    List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
     int threadsCount = 10;
 
     // When
     try (ThreadsCollider threadsCollider =
         threadsCollider().withThreadsCount(threadsCount).build()) {
 
-      threadsCollider.collide(failingRunnable);
-
-      // Then
-      then(threadsCollider.exceptions()).hasSize(threadsCount);
+      threadsCollider.collide(failingRunnable, exceptions::add);
     }
+
+    // Then
+    then(exceptions).hasSize(threadsCount).map(Exception::getMessage).containsOnly("message");
+  }
+
+  @RepeatedTest(10)
+  void Log_failed_threads_exceptions_in_thread_safe_manner() {
+    // Given
+    Runnable failingRunnable =
+        () -> {
+          throw new IllegalStateException("message");
+        };
+    List<Exception> exceptions = new ArrayList<>();
+    int threadsCount = 10;
+
+    // When
+    try (ThreadsCollider threadsCollider =
+        threadsCollider().withThreadsCount(threadsCount).build()) {
+
+      threadsCollider.collide(failingRunnable, exceptions::add);
+    }
+
+    // Then
+    then(exceptions).hasSize(threadsCount).map(Exception::getMessage).containsOnly("message");
   }
 }

@@ -1,14 +1,12 @@
 package pl.amazingcode.threadscollider;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /** Allows to execute given code by all threads at the "same time". */
 public final class ThreadsCollider implements AutoCloseable {
@@ -22,7 +20,6 @@ public final class ThreadsCollider implements AutoCloseable {
   private final CountDownLatch runningThreadsLatch;
   private final long timeout;
   private final TimeUnit timeUnit;
-  private final List<Exception> exceptions;
 
   private ThreadsCollider(int threadsCount, long timeout, TimeUnit timeUnit) {
 
@@ -33,19 +30,34 @@ public final class ThreadsCollider implements AutoCloseable {
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
     this.timeout = timeout;
     this.timeUnit = timeUnit;
-    this.exceptions = Collections.synchronizedList(new ArrayList<>());
   }
 
   /**
    * Tries to execute given code by all threads at the "same time".
    *
    * @param runnable - code to be executed by each thread.
+   * @throws ThreadsColliderFailure if any exception occurs during execution. This not includes
+   *     exceptions thrown by threads.
    */
   public void collide(Runnable runnable) {
 
+    collide(runnable, (exception) -> {});
+  }
+
+  /**
+   * Tries to execute given code by all threads at the "same time".
+   *
+   * @param runnable - code to be executed by each thread.
+   * @param threadsExceptionConsumer - consumer for exceptions thrown by threads. Consumer will be
+   *     called in thread safe manner.
+   * @throws ThreadsColliderFailure if any exception occurs during execution. This not includes
+   *     exceptions thrown by threads.
+   */
+  public void collide(Runnable runnable, Consumer<Exception> threadsExceptionConsumer) {
+
     try {
       for (int i = 0; i < threadsCount; i++) {
-        executor.execute(() -> decorate(runnable));
+        executor.execute(() -> decorate(runnable, threadsExceptionConsumer));
       }
 
       while (startedThreadsCount.get() < threadsCount)
@@ -58,7 +70,7 @@ public final class ThreadsCollider implements AutoCloseable {
     }
   }
 
-  private void decorate(Runnable runnable) {
+  private void decorate(Runnable runnable, Consumer<Exception> threadsExceptionConsumer) {
 
     try {
       startedThreadsCount.incrementAndGet();
@@ -71,10 +83,16 @@ public final class ThreadsCollider implements AutoCloseable {
 
       runnable.run();
     } catch (Exception exception) {
-      exceptions.add(exception);
+      acceptException(threadsExceptionConsumer, exception);
     } finally {
       runningThreadsLatch.countDown();
     }
+  }
+
+  private synchronized void acceptException(
+      Consumer<Exception> threadsExceptionConsumer, Exception exception) {
+
+    threadsExceptionConsumer.accept(exception);
   }
 
   /** Shuts down the executor service and waits for all threads to finish by given timeout. */
@@ -89,11 +107,6 @@ public final class ThreadsCollider implements AutoCloseable {
     } catch (InterruptedException e) {
       executor.shutdownNow();
     }
-  }
-
-  public List<Exception> exceptions() {
-
-    return exceptions;
   }
 
   /** Builder for {@link ThreadsCollider}. */
