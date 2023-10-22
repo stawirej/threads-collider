@@ -1,5 +1,9 @@
 package pl.amazingcode.threadscollider;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,16 +19,20 @@ public final class ThreadsCollider implements AutoCloseable {
   private final int threadsCount;
   private final AtomicInteger startedThreadsCount = new AtomicInteger(0);
   private final AtomicBoolean spinLock;
+  private final CountDownLatch runningThreadsLatch;
   private final long timeout;
   private final TimeUnit timeUnit;
+  private final List<Exception> exceptions;
 
   private ThreadsCollider(int threadsCount, long timeout, TimeUnit timeUnit) {
 
     this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
     this.threadsCount = threadsCount;
+    this.runningThreadsLatch = new CountDownLatch(threadsCount);
     this.timeout = timeout;
     this.timeUnit = timeUnit;
+    this.exceptions = Collections.synchronizedList(new ArrayList<>());
   }
 
   /**
@@ -34,27 +42,38 @@ public final class ThreadsCollider implements AutoCloseable {
    */
   public void collide(Runnable runnable) {
 
-    for (int i = 0; i < threadsCount; i++) {
-      executor.execute(() -> decorate(runnable));
+    try {
+      for (int i = 0; i < threadsCount; i++) {
+        executor.execute(() -> decorate(runnable));
+      }
+
+      while (startedThreadsCount.get() < threadsCount)
+        ;
+
+      spinLock.set(false);
+      runningThreadsLatch.await();
+    } catch (InterruptedException exception) {
+      throw ThreadsColliderFailure.from(exception);
     }
-
-    while (startedThreadsCount.get() < threadsCount)
-      ;
-
-    spinLock.set(false);
   }
 
   private void decorate(Runnable runnable) {
 
-    startedThreadsCount.incrementAndGet();
+    try {
+      startedThreadsCount.incrementAndGet();
 
-    while (startedThreadsCount.get() < threadsCount)
-      ;
+      while (startedThreadsCount.get() < threadsCount)
+        ;
 
-    while (spinLock.get())
-      ;
+      while (spinLock.get())
+        ;
 
-    runnable.run();
+      runnable.run();
+    } catch (Exception exception) {
+      exceptions.add(exception);
+    } finally {
+      runningThreadsLatch.countDown();
+    }
   }
 
   /** Shuts down the executor service and waits for all threads to finish by given timeout. */
@@ -69,6 +88,11 @@ public final class ThreadsCollider implements AutoCloseable {
     } catch (InterruptedException e) {
       executor.shutdownNow();
     }
+  }
+
+  public List<Exception> exceptions() {
+
+    return exceptions;
   }
 
   /** Builder for {@link ThreadsCollider}. */

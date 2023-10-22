@@ -74,4 +74,24 @@ final class UseCases_Scenarios {
     // Then
     then(map).hasSize(1).containsEntry("foo", "bar");
   }
+
+  @RepeatedTest(10)
+  void Log_failed_threads_exceptions() {
+    // Given
+    Runnable failingRunnable =
+        () -> {
+          throw new IllegalStateException("message");
+        };
+    int threadsCount = 10;
+
+    // When
+    try (ThreadsCollider threadsCollider =
+        threadsCollider().withThreadsCount(threadsCount).build()) {
+
+      threadsCollider.collide(failingRunnable);
+
+      // Then
+      then(threadsCollider.exceptions()).hasSize(threadsCount);
+    }
+  }
 }
