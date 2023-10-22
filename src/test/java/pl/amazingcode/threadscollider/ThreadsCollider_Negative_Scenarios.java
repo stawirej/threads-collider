@@ -15,7 +15,7 @@ import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Negative_Scenarios {
 
-  private static final int TEST_REPETITIONS = 150;
+  private static final int TEST_REPETITIONS = 200;
 
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);

@@ -1,7 +1,18 @@
 package pl.amazingcode.threadscollider;
 
+import java.util.function.Consumer;
+
 /** Intermediary builder for {@link ThreadsCollider}. */
-public interface TimeoutBuilder {
+public interface OptionalBuilder {
+
+  /**
+   * Sets exception consumer for threads. This consumer will be called for each exception thrown by
+   * threads. Consumer will be called in thread safe manner.
+   *
+   * @param threadsExceptionsConsumer - exception consumer for threads.
+   * @return {@link OptionalBuilder}
+   */
+  OptionalBuilder withThreadsExceptionsConsumer(Consumer<Exception> threadsExceptionsConsumer);
 
   /**
    * Sets await termination timeout for executor service used by {@link ThreadsCollider}.

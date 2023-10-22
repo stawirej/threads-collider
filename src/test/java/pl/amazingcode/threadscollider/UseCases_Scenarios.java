@@ -87,9 +87,12 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withThreadsCount(threadsCount).build()) {
+        threadsCollider()
+            .withThreadsCount(threadsCount)
+            .withThreadsExceptionsConsumer(exceptions::add)
+            .build()) {
 
-      threadsCollider.collide(failingRunnable, exceptions::add);
+      threadsCollider.collide(failingRunnable);
     }
 
     // Then
@@ -108,9 +111,12 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withThreadsCount(threadsCount).build()) {
+        threadsCollider()
+            .withThreadsCount(threadsCount)
+            .withThreadsExceptionsConsumer(exceptions::add)
+            .build()) {
 
-      threadsCollider.collide(failingRunnable, exceptions::add);
+      threadsCollider.collide(failingRunnable);
     }
 
     // Then

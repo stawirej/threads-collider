@@ -7,15 +7,15 @@ public interface ThreadsCountBuilder {
    * Sets number of threads to be used by {@link ThreadsCollider}.
    *
    * @param threadsCount - number of threads to be used by {@link ThreadsCollider}.
-   * @return {@link TimeoutBuilder}
+   * @return {@link OptionalBuilder}
    */
-  TimeoutBuilder withThreadsCount(int threadsCount);
+  OptionalBuilder withThreadsCount(int threadsCount);
 
   /**
    * Sets the number of threads to be used by {@link ThreadsCollider} to number of available
    * processors to the virtual machine. Never smaller than one.
    *
-   * @return {@link TimeoutBuilder}
+   * @return {@link OptionalBuilder}
    */
-  TimeoutBuilder withAvailableProcessors();
+  OptionalBuilder withAvailableProcessors();
 }

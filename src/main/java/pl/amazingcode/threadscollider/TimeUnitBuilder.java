@@ -9,7 +9,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asNanoseconds();
+  OptionalBuilder asNanoseconds();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -17,7 +17,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asMicroseconds();
+  OptionalBuilder asMicroseconds();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -25,7 +25,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asMilliseconds();
+  OptionalBuilder asMilliseconds();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -33,7 +33,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asSeconds();
+  OptionalBuilder asSeconds();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -41,7 +41,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asMinutes();
+  OptionalBuilder asMinutes();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -49,7 +49,7 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asHours();
+  OptionalBuilder asHours();
 
   /**
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
@@ -57,5 +57,5 @@ public interface TimeUnitBuilder {
    *
    * @return {@link Builder}
    */
-  Builder asDays();
+  OptionalBuilder asDays();
 }

@@ -20,8 +20,13 @@ public final class ThreadsCollider implements AutoCloseable {
   private final CountDownLatch runningThreadsLatch;
   private final long timeout;
   private final TimeUnit timeUnit;
+  private final Consumer<Exception> threadsExceptionsConsumer;
 
-  private ThreadsCollider(int threadsCount, long timeout, TimeUnit timeUnit) {
+  private ThreadsCollider(
+      int threadsCount,
+      long timeout,
+      TimeUnit timeUnit,
+      Consumer<Exception> threadsExceptionsConsumer) {
 
     this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
@@ -30,6 +35,7 @@ public final class ThreadsCollider implements AutoCloseable {
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
     this.timeout = timeout;
     this.timeUnit = timeUnit;
+    this.threadsExceptionsConsumer = threadsExceptionsConsumer;
   }
 
   /**
@@ -41,23 +47,9 @@ public final class ThreadsCollider implements AutoCloseable {
    */
   public void collide(Runnable runnable) {
 
-    collide(runnable, (exception) -> {});
-  }
-
-  /**
-   * Tries to execute given code by all threads at the "same time".
-   *
-   * @param runnable - code to be executed by each thread.
-   * @param threadsExceptionConsumer - consumer for exceptions thrown by threads. Consumer will be
-   *     called in thread safe manner.
-   * @throws ThreadsColliderFailure if any exception occurs during execution. This not includes
-   *     exceptions thrown by threads.
-   */
-  public void collide(Runnable runnable, Consumer<Exception> threadsExceptionConsumer) {
-
     try {
       for (int i = 0; i < threadsCount; i++) {
-        executor.execute(() -> decorate(runnable, threadsExceptionConsumer));
+        executor.execute(() -> decorate(runnable, threadsExceptionsConsumer));
       }
 
       while (startedThreadsCount.get() < threadsCount)
@@ -83,14 +75,13 @@ public final class ThreadsCollider implements AutoCloseable {
 
       runnable.run();
     } catch (Exception exception) {
-      consumeException(threadsExceptionsConsumer, exception);
+      consumeException(exception);
     } finally {
       runningThreadsLatch.countDown();
     }
   }
 
-  private synchronized void consumeException(
-      Consumer<Exception> threadsExceptionsConsumer, Exception exception) {
+  private synchronized void consumeException(Exception exception) {
 
     threadsExceptionsConsumer.accept(exception);
   }
@@ -111,11 +102,12 @@ public final class ThreadsCollider implements AutoCloseable {
 
   /** Builder for {@link ThreadsCollider}. */
   public static class ThreadsColliderBuilder
-      implements ThreadsCountBuilder, TimeoutBuilder, TimeUnitBuilder, Builder {
+      implements ThreadsCountBuilder, OptionalBuilder, TimeUnitBuilder, Builder {
 
     private int threadsCount;
     private long timeout = DEFAULT_TIMEOUT;
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
+    private Consumer<Exception> threadsExceptionsConsumer = (exception) -> {};
 
     private ThreadsColliderBuilder() {}
 
@@ -129,18 +121,21 @@ public final class ThreadsCollider implements AutoCloseable {
       return new ThreadsColliderBuilder();
     }
 
-    public TimeoutBuilder withThreadsCount(int threadsCount) {
+    @Override
+    public OptionalBuilder withThreadsCount(int threadsCount) {
 
       this.threadsCount = threadsCount;
       return this;
     }
 
-    public TimeoutBuilder withAvailableProcessors() {
+    @Override
+    public OptionalBuilder withAvailableProcessors() {
 
       this.threadsCount = Runtime.getRuntime().availableProcessors();
       return this;
     }
 
+    @Override
     public TimeUnitBuilder withAwaitTerminationTimeout(long timeout) {
 
       this.timeout = timeout;
@@ -148,49 +143,57 @@ public final class ThreadsCollider implements AutoCloseable {
     }
 
     @Override
-    public Builder asNanoseconds() {
+    public OptionalBuilder withThreadsExceptionsConsumer(
+        Consumer<Exception> threadsExceptionsConsumer) {
+
+      this.threadsExceptionsConsumer = threadsExceptionsConsumer;
+      return this;
+    }
+
+    @Override
+    public OptionalBuilder asNanoseconds() {
 
       this.timeUnit = TimeUnit.NANOSECONDS;
       return this;
     }
 
     @Override
-    public Builder asMicroseconds() {
+    public OptionalBuilder asMicroseconds() {
 
       this.timeUnit = TimeUnit.MICROSECONDS;
       return this;
     }
 
     @Override
-    public Builder asMilliseconds() {
+    public OptionalBuilder asMilliseconds() {
 
       this.timeUnit = TimeUnit.MILLISECONDS;
       return this;
     }
 
     @Override
-    public Builder asSeconds() {
+    public OptionalBuilder asSeconds() {
 
       this.timeUnit = TimeUnit.SECONDS;
       return this;
     }
 
     @Override
-    public Builder asMinutes() {
+    public OptionalBuilder asMinutes() {
 
       this.timeUnit = TimeUnit.MINUTES;
       return this;
     }
 
     @Override
-    public Builder asHours() {
+    public OptionalBuilder asHours() {
 
       this.timeUnit = TimeUnit.HOURS;
       return this;
     }
 
     @Override
-    public Builder asDays() {
+    public OptionalBuilder asDays() {
 
       this.timeUnit = TimeUnit.DAYS;
       return this;
@@ -198,7 +201,7 @@ public final class ThreadsCollider implements AutoCloseable {
 
     public ThreadsCollider build() {
 
-      return new ThreadsCollider(threadsCount, timeout, timeUnit);
+      return new ThreadsCollider(threadsCount, timeout, timeUnit, threadsExceptionsConsumer);
     }
   }
 }
