@@ -17,7 +17,7 @@ public final class ThreadsCollider implements AutoCloseable {
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
   private final ExecutorService executor;
   private final int threadsCount;
-  private final AtomicInteger startedThreadsCount = new AtomicInteger(0);
+  private final AtomicInteger startedThreadsCount;
   private final AtomicBoolean spinLock;
   private final CountDownLatch runningThreadsLatch;
   private final long timeout;
@@ -29,6 +29,7 @@ public final class ThreadsCollider implements AutoCloseable {
     this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
     this.threadsCount = threadsCount;
+    this.startedThreadsCount = new AtomicInteger(0);
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
     this.timeout = timeout;
     this.timeUnit = timeUnit;
