@@ -70,7 +70,7 @@ public final class ThreadsCollider implements AutoCloseable {
     }
   }
 
-  private void decorate(Runnable runnable, Consumer<Exception> threadsExceptionConsumer) {
+  private void decorate(Runnable runnable, Consumer<Exception> threadsExceptionsConsumer) {
 
     try {
       startedThreadsCount.incrementAndGet();
@@ -83,16 +83,16 @@ public final class ThreadsCollider implements AutoCloseable {
 
       runnable.run();
     } catch (Exception exception) {
-      acceptException(threadsExceptionConsumer, exception);
+      consumeException(threadsExceptionsConsumer, exception);
     } finally {
       runningThreadsLatch.countDown();
     }
   }
 
-  private synchronized void acceptException(
-      Consumer<Exception> threadsExceptionConsumer, Exception exception) {
+  private synchronized void consumeException(
+      Consumer<Exception> threadsExceptionsConsumer, Exception exception) {
 
-    threadsExceptionConsumer.accept(exception);
+    threadsExceptionsConsumer.accept(exception);
   }
 
   /** Shuts down the executor service and waits for all threads to finish by given timeout. */
