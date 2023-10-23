@@ -1,7 +1,6 @@
 ## About
 
-`Threads Collider` allows to start multiple threads with desired functionality at "exactly" same moment for testing purposes
-to manifest concurrency issues.
+`Threads Collider` attempts to execute a desired action on multiple threads at the "exactly" same moment to increase the chances of manifesting issues caused by a race condition.
 
 ## Overview
 
