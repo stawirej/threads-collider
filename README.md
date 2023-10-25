@@ -75,7 +75,7 @@ void Adding_unique_apples_is_thread_safe() {
     // When
     try (ThreadsCollider threadsCollider =    // use try-with-resources to automatically shutdown threads collider
         threadsCollider()
-            .withAvailableProcessors()        // or withThreadsCount(CUSTOM_THREADS_COUNT)
+            .withAvailableProcessors()        // preferred; or withThreadsCount(CUSTOM_THREADS_COUNT)
             .withThreadsExceptionsConsumer(exceptions::add) // optional threads exceptions consumer, default do nothing
             .withAwaitTerminationTimeout(10)  // optional, default 60 seconds
             .asSeconds()                      // optional - related only to "withAwaitTerminationTimeout()", default TimeUnit.SECONDS
