@@ -49,7 +49,7 @@ public final class ThreadsCollider implements AutoCloseable {
 
     try {
       for (int i = 0; i < threadsCount; i++) {
-        executor.execute(() -> decorate(runnable, threadsExceptionsConsumer));
+        executor.execute(() -> decorate(runnable));
       }
 
       while (startedThreadsCount.get() < threadsCount)
@@ -62,7 +62,7 @@ public final class ThreadsCollider implements AutoCloseable {
     }
   }
 
-  private void decorate(Runnable runnable, Consumer<Exception> threadsExceptionsConsumer) {
+  private void decorate(Runnable runnable) {
 
     try {
       startedThreadsCount.incrementAndGet();
