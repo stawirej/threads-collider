@@ -19,7 +19,8 @@ final class MultiThreadsCollider_Scenarios {
     List<String> list = Collections.synchronizedList(new ArrayList<>());
     List<Exception> exceptions = new ArrayList<>();
     int threadsCount = Runtime.getRuntime().availableProcessors();
-    int times = threadsCount / 2;
+    int addThreadsCount = threadsCount / 2;
+    int removeThreadsCount = threadsCount / 2;
 
     for (int i = 0; i < threadsCount; i++) {
       list.add("text");
@@ -28,10 +29,10 @@ final class MultiThreadsCollider_Scenarios {
     // When
     try (MultiThreadsCollider threadsCollider =
         multiThreadsCollider()
-            .withRunnable(() -> list.add("text"))
-            .times(times)
-            .withRunnable(() -> list.remove("text"))
-            .times(times)
+            .withAction(() -> list.add("text"))
+            .times(addThreadsCount)
+            .withAction(() -> list.remove("text"))
+            .times(removeThreadsCount)
             .withThreadsExceptionsConsumer(exceptions::add)
             .build()) {
 

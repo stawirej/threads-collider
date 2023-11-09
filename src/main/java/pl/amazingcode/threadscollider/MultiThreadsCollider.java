@@ -125,7 +125,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
       return new MultiThreadsColliderBuilder();
     }
 
-    public MultiThreadsColliderBuilder withRunnable(Runnable runnable) {
+    public MultiThreadsColliderBuilder withAction(Runnable runnable) {
 
       this.runnables.add(runnable);
       return this;
