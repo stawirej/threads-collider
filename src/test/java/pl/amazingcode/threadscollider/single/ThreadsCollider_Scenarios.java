@@ -1,8 +1,8 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.single;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 import static pl.amazingcode.threadscollider.fixtures.AppleExamples.RED_DELICIOUS;
+import static pl.amazingcode.threadscollider.single.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

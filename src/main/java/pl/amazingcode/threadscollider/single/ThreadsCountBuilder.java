@@ -1,4 +1,4 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.single;
 
 /** Intermediary builder for {@link ThreadsCollider}. */
 public interface ThreadsCountBuilder {

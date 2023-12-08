@@ -1,4 +1,4 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.single;
 
 import java.util.function.Consumer;
 

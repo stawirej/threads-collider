@@ -1,7 +1,7 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.multi;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
+import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
 
 import java.util.ArrayList;
 import java.util.Collections;

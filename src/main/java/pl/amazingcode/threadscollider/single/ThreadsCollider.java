@@ -1,8 +1,5 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.single;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,13 +7,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import pl.amazingcode.threadscollider.exceptions.ThreadsColliderFailure;
 
-public final class MultiThreadsCollider implements AutoCloseable {
+/** Allows to execute given code by all threads at the "same time". */
+public final class ThreadsCollider implements AutoCloseable {
 
   private static final long DEFAULT_TIMEOUT = 60;
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
-  private final List<Runnable> runnables;
-  private final List<Integer> times;
   private final ExecutorService executor;
   private final int threadsCount;
   private final AtomicInteger startedThreadsCount;
@@ -26,19 +23,15 @@ public final class MultiThreadsCollider implements AutoCloseable {
   private final TimeUnit timeUnit;
   private final Consumer<Exception> threadsExceptionsConsumer;
 
-  private MultiThreadsCollider(
-      List<Runnable> runnables,
-      List<Integer> times,
+  private ThreadsCollider(
       int threadsCount,
       long timeout,
       TimeUnit timeUnit,
       Consumer<Exception> threadsExceptionsConsumer) {
 
-    this.runnables = runnables;
-    this.times = times;
-    this.threadsCount = threadsCount;
     this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
+    this.threadsCount = threadsCount;
     this.startedThreadsCount = new AtomicInteger(0);
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
     this.timeout = timeout;
@@ -46,18 +39,18 @@ public final class MultiThreadsCollider implements AutoCloseable {
     this.threadsExceptionsConsumer = threadsExceptionsConsumer;
   }
 
-  public void collide() {
+  /**
+   * Tries to execute given code by all threads at the "same time".
+   *
+   * @param runnable - code to be executed by each thread.
+   * @throws ThreadsColliderFailure if any exception occurs during execution. This not includes
+   *     exceptions thrown by threads.
+   */
+  public void collide(Runnable runnable) {
 
     try {
-      Iterator<Runnable> runnableIterator = runnables.iterator();
-      Iterator<Integer> timesIterator = times.iterator();
-
-      while (runnableIterator.hasNext()) {
-        Runnable runnable = runnableIterator.next();
-        int times = timesIterator.next();
-        for (int i = 0; i < times; i++) {
-          executor.execute(() -> decorate(runnable));
-        }
+      for (int i = 0; i < threadsCount; i++) {
+        executor.execute(() -> decorate(runnable));
       }
 
       while (startedThreadsCount.get() < threadsCount)
@@ -89,8 +82,15 @@ public final class MultiThreadsCollider implements AutoCloseable {
     }
   }
 
+  private synchronized void consumeException(Exception exception) {
+
+    threadsExceptionsConsumer.accept(exception);
+  }
+
+  /** Shuts down the executor service and waits for all threads to finish by given timeout. */
   @Override
   public void close() {
+
     try {
       executor.shutdown();
       if (!executor.awaitTermination(timeout, timeUnit)) {
@@ -101,103 +101,108 @@ public final class MultiThreadsCollider implements AutoCloseable {
     }
   }
 
-  private synchronized void consumeException(Exception exception) {
+  /** Builder for {@link ThreadsCollider}. */
+  public static class ThreadsColliderBuilder
+      implements ThreadsCountBuilder, OptionalBuilder, TimeUnitBuilder, Builder {
 
-    threadsExceptionsConsumer.accept(exception);
-  }
-
-  public static class MultiThreadsColliderBuilder {
-
-    private final List<Runnable> runnables;
-    private final List<Integer> times;
+    private int threadsCount;
     private long timeout = DEFAULT_TIMEOUT;
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
     private Consumer<Exception> threadsExceptionsConsumer = (exception) -> {};
 
-    private MultiThreadsColliderBuilder() {
+    private ThreadsColliderBuilder() {}
 
-      this.runnables = new ArrayList<>();
-      this.times = new ArrayList<>();
+    /**
+     * Creates new instance of {@link ThreadsColliderBuilder} with default values.
+     *
+     * @return new instance of {@link ThreadsColliderBuilder}
+     */
+    public static ThreadsCountBuilder threadsCollider() {
+
+      return new ThreadsColliderBuilder();
     }
 
-    public static MultiThreadsColliderBuilder multiThreadsCollider() {
+    @Override
+    public OptionalBuilder withThreadsCount(int threadsCount) {
 
-      return new MultiThreadsColliderBuilder();
-    }
-
-    public MultiThreadsColliderBuilder withAction(Runnable runnable) {
-
-      this.runnables.add(runnable);
+      this.threadsCount = threadsCount;
       return this;
     }
 
-    public MultiThreadsColliderBuilder times(int times) {
+    @Override
+    public OptionalBuilder withAvailableProcessors() {
 
-      this.times.add(times);
+      this.threadsCount = Runtime.getRuntime().availableProcessors();
       return this;
     }
 
-    public MultiThreadsColliderBuilder withAwaitTerminationTimeout(long timeout) {
+    @Override
+    public TimeUnitBuilder withAwaitTerminationTimeout(long timeout) {
 
       this.timeout = timeout;
       return this;
     }
 
-    public MultiThreadsColliderBuilder withThreadsExceptionsConsumer(
+    @Override
+    public OptionalBuilder withThreadsExceptionsConsumer(
         Consumer<Exception> threadsExceptionsConsumer) {
 
       this.threadsExceptionsConsumer = threadsExceptionsConsumer;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asNanoseconds() {
+    @Override
+    public OptionalBuilder asNanoseconds() {
 
       this.timeUnit = TimeUnit.NANOSECONDS;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asMicroseconds() {
+    @Override
+    public OptionalBuilder asMicroseconds() {
 
       this.timeUnit = TimeUnit.MICROSECONDS;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asMilliseconds() {
+    @Override
+    public OptionalBuilder asMilliseconds() {
 
       this.timeUnit = TimeUnit.MILLISECONDS;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asSeconds() {
+    @Override
+    public OptionalBuilder asSeconds() {
 
       this.timeUnit = TimeUnit.SECONDS;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asMinutes() {
+    @Override
+    public OptionalBuilder asMinutes() {
 
       this.timeUnit = TimeUnit.MINUTES;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asHours() {
+    @Override
+    public OptionalBuilder asHours() {
 
       this.timeUnit = TimeUnit.HOURS;
       return this;
     }
 
-    public MultiThreadsColliderBuilder asDays() {
+    @Override
+    public OptionalBuilder asDays() {
 
       this.timeUnit = TimeUnit.DAYS;
       return this;
     }
 
-    public MultiThreadsCollider build() {
+    public ThreadsCollider build() {
 
-      int threadsCount = times.stream().mapToInt(Integer::intValue).sum();
-
-      return new MultiThreadsCollider(
-          runnables, times, threadsCount, timeout, timeUnit, threadsExceptionsConsumer);
+      return new ThreadsCollider(threadsCount, timeout, timeUnit, threadsExceptionsConsumer);
     }
   }
 }

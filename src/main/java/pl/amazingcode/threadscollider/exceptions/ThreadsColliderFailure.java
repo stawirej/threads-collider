@@ -1,6 +1,6 @@
-package pl.amazingcode.threadscollider;
+package pl.amazingcode.threadscollider.exceptions;
 
-final class ThreadsColliderFailure extends RuntimeException {
+public final class ThreadsColliderFailure extends RuntimeException {
 
   private ThreadsColliderFailure(Throwable cause) {
 
