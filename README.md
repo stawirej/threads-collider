@@ -125,8 +125,7 @@ public class Counter {
 ```java
 private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
 
-@RepeatedTest(10)
-    // run test multiple times to increase chance of manifesting concurrency issues
+@RepeatedTest(10)   // run test multiple times to increase chance of manifesting concurrency issues
 void Thread_safe_counter() {
     // Given
     Counter counter = new Counter();
@@ -139,8 +138,7 @@ void Thread_safe_counter() {
                  .times(ACTION_THREADS_COUNT)       // set number of threads to execute first action
                  .withAction(counter::decrement)    // second action to be executed simultaneously
                  .times(ACTION_THREADS_COUNT)       // set number of threads to execute second action
-                 .withThreadsExceptionsConsumer(
-                     exceptions::add)    // optional threads exceptions consumer, default do nothing
+                 .withThreadsExceptionsConsumer(exceptions::add)    // optional threads exceptions consumer, default do nothing
                  .build()) {
 
         threadsCollider.collide();
