@@ -135,6 +135,11 @@ public final class MultiThreadsCollider implements AutoCloseable {
       this.times = new ArrayList<>();
     }
 
+    /**
+     * Creates new instance of {@link MultiThreadsColliderBuilder}.
+     *
+     * @return {@link MultiThreadsColliderBuilder}
+     */
     public static MandatoryActionBuilder multiThreadsCollider() {
 
       return new MultiThreadsColliderBuilder();
