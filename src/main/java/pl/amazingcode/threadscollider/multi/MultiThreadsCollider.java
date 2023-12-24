@@ -1,11 +1,17 @@
 package pl.amazingcode.threadscollider.multi;
 
+import java.lang.management.LockInfo;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MonitorInfo;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,7 +45,14 @@ public final class MultiThreadsCollider implements AutoCloseable {
     this.runnables = runnables;
     this.times = times;
     this.threadsCount = threadsCount;
-    this.executor = Executors.newFixedThreadPool(threadsCount);
+    ThreadFactory threadFactory =
+        runnable -> {
+          Thread thread = new Thread(runnable);
+          thread.setDaemon(true);
+          thread.setName("threads-collider-pool-" + thread.getName());
+          return thread;
+        };
+    this.executor = Executors.newFixedThreadPool(threadsCount, threadFactory);
     this.spinLock = new AtomicBoolean(true);
     this.startedThreadsCount = new AtomicInteger(0);
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
@@ -72,7 +85,13 @@ public final class MultiThreadsCollider implements AutoCloseable {
         ;
 
       spinLock.set(false);
-      runningThreadsLatch.await();
+
+      if (!runningThreadsLatch.await(timeout, timeUnit)) {
+        threadsExceptionsConsumer.accept(
+            new RuntimeException(
+                "Threads did not finish in time. Thread dump: " + threadDump(true, true)));
+      }
+
     } catch (InterruptedException exception) {
       throw ThreadsColliderFailure.from(exception);
     }
@@ -113,6 +132,29 @@ public final class MultiThreadsCollider implements AutoCloseable {
   private synchronized void consumeException(Exception exception) {
 
     threadsExceptionsConsumer.accept(exception);
+  }
+
+  private String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
+
+    StringBuilder threadDump = new StringBuilder(System.lineSeparator());
+    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+    for (long threadId : threadMXBean.findDeadlockedThreads()) {
+      ThreadInfo threadInfo = threadMXBean.getThreadInfo(threadId);
+      if (threadInfo != null) {
+        threadDump.append(threadInfo);
+        if (lockedMonitors) {
+          for (MonitorInfo monitorInfo : threadInfo.getLockedMonitors()) {
+            threadDump.append(monitorInfo.toString());
+          }
+        }
+        if (lockedSynchronizers) {
+          for (LockInfo lockInfo : threadInfo.getLockedSynchronizers()) {
+            threadDump.append(lockInfo.toString());
+          }
+        }
+      }
+    }
+    return threadDump.toString();
   }
 
   /** Builder for {@link MultiThreadsCollider}. */

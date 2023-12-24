@@ -16,7 +16,8 @@ public interface MultiOptionalBuilder {
   MultiOptionalBuilder withThreadsExceptionsConsumer(Consumer<Exception> threadsExceptionsConsumer);
 
   /**
-   * Sets await termination timeout for executor service used by {@link ThreadsCollider}.
+   * Sets await termination timeout for executor service used by {@link ThreadsCollider}. Use the
+   * same value as timeout for {@link MultiThreadsCollider#collide()}.
    *
    * @param timeout - await termination timeout for executor service used by {@link
    *     ThreadsCollider}.
