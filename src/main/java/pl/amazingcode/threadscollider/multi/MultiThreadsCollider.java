@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,14 +44,14 @@ public final class MultiThreadsCollider implements AutoCloseable {
     this.runnables = runnables;
     this.times = times;
     this.threadsCount = threadsCount;
-    ThreadFactory threadFactory =
-        runnable -> {
-          Thread thread = new Thread(runnable);
-          thread.setDaemon(true);
-          thread.setName("threads-collider-pool-" + thread.getName());
-          return thread;
-        };
-    this.executor = Executors.newFixedThreadPool(threadsCount, threadFactory);
+    //    ThreadFactory threadFactory =
+    //        runnable -> {
+    //          Thread thread = new Thread(runnable);
+    //          thread.setDaemon(true);
+    //          thread.setName("threads-collider-pool-" + thread.getName());
+    //          return thread;
+    //        };
+    this.executor = Executors.newFixedThreadPool(threadsCount);
     this.spinLock = new AtomicBoolean(true);
     this.startedThreadsCount = new AtomicInteger(0);
     this.runningThreadsLatch = new CountDownLatch(threadsCount);
