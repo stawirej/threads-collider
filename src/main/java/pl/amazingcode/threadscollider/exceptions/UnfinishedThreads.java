@@ -16,7 +16,7 @@ public final class UnfinishedThreads extends RuntimeException {
           + System.lineSeparator()
           + "If there are no deadlocks, please increase timeout."
           + System.lineSeparator()
-          + "Deadlocked threads: %s";
+          + "Deadlocked threads: [%s]";
 
   private UnfinishedThreads(String message) {
     super(message);
