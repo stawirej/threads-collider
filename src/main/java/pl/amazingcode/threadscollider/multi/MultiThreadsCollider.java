@@ -82,7 +82,8 @@ public final class MultiThreadsCollider implements AutoCloseable {
       spinLock.set(false);
 
       if (!runningThreadsLatch.await(timeout, timeUnit)) {
-        threadsExceptionsConsumer.accept(UnfinishedThreads.newInstance());
+        threadsExceptionsConsumer.accept(
+            UnfinishedThreads.becauseTimeoutExceeded(timeout, timeUnit));
       }
 
     } catch (InterruptedException exception) {
