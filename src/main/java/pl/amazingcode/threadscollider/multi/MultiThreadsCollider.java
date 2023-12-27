@@ -1,10 +1,5 @@
 package pl.amazingcode.threadscollider.multi;
 
-import java.lang.management.LockInfo;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MonitorInfo;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import pl.amazingcode.threadscollider.exceptions.ThreadsColliderFailure;
+import pl.amazingcode.threadscollider.exceptions.UnfinishedThreads;
 
 /** Allows to execute multiple actions by all threads at the "same time". */
 public final class MultiThreadsCollider implements AutoCloseable {
@@ -86,9 +82,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
       spinLock.set(false);
 
       if (!runningThreadsLatch.await(timeout, timeUnit)) {
-        threadsExceptionsConsumer.accept(
-            new RuntimeException(
-                "Threads did not finish in time. Thread dump: " + threadDump(true, true)));
+        threadsExceptionsConsumer.accept(UnfinishedThreads.newInstance());
       }
 
     } catch (InterruptedException exception) {
@@ -131,29 +125,6 @@ public final class MultiThreadsCollider implements AutoCloseable {
   private synchronized void consumeException(Exception exception) {
 
     threadsExceptionsConsumer.accept(exception);
-  }
-
-  private String threadDump(boolean lockedMonitors, boolean lockedSynchronizers) {
-
-    StringBuilder threadDump = new StringBuilder(System.lineSeparator());
-    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-    for (long threadId : threadMXBean.findDeadlockedThreads()) {
-      ThreadInfo threadInfo = threadMXBean.getThreadInfo(threadId);
-      if (threadInfo != null) {
-        threadDump.append(threadInfo);
-        if (lockedMonitors) {
-          for (MonitorInfo monitorInfo : threadInfo.getLockedMonitors()) {
-            threadDump.append(monitorInfo.toString());
-          }
-        }
-        if (lockedSynchronizers) {
-          for (LockInfo lockInfo : threadInfo.getLockedSynchronizers()) {
-            threadDump.append(lockInfo.toString());
-          }
-        }
-      }
-    }
-    return threadDump.toString();
   }
 
   /** Builder for {@link MultiThreadsCollider}. */
