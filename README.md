@@ -184,3 +184,10 @@ void Thread_safe_counter() {
 ```groovy
 testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.2"
 ```
+
+### TODO
+
+- [ ] Add deadlock detection for ThreadCollider
+- [ ] Update javadocs for timeout methods for ThreadsCollider
+- [ ] Check negative times method arguments
+- [ ] Check processors count

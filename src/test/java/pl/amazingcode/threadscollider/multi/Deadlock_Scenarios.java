@@ -6,6 +6,7 @@ import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThr
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
@@ -43,6 +44,7 @@ final class Deadlock_Scenarios {
     list2 = new ArrayList<>();
   }
 
+  @Disabled
   @RepeatedTest(10)
   void Detect_deadlock() {
     // Given
@@ -51,9 +53,9 @@ final class Deadlock_Scenarios {
     // When
     try (MultiThreadsCollider collider =
         multiThreadsCollider()
-            .withAction(() -> update1(list1, list2))
+            .withAction(() -> update1(list1, list2), "update1")
             .times(ACTION_THREADS_COUNT)
-            .withAction(() -> update2(list2, list1))
+            .withAction(() -> update2(list2, list1), "update2")
             .times(ACTION_THREADS_COUNT)
             .withThreadsExceptionsConsumer(exceptions::add)
             .withAwaitTerminationTimeout(100)

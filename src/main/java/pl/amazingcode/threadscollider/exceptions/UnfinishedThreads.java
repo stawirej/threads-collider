@@ -9,6 +9,11 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Exception thrown when {@link pl.amazingcode.threadscollider.single.ThreadsCollider} or {@link
+ * pl.amazingcode.threadscollider.multi.MultiThreadsCollider} has not finished threads within the
+ * specified timeout.
+ */
 public final class UnfinishedThreads extends RuntimeException {
 
   private static final String MESSAGE =
@@ -25,6 +30,13 @@ public final class UnfinishedThreads extends RuntimeException {
     super(message);
   }
 
+  /**
+   * Creates new instance of {@link UnfinishedThreads}.
+   *
+   * @param timeout - threads timeout
+   * @param timeUnit - timeout time unit
+   * @return {@link UnfinishedThreads}
+   */
   public static UnfinishedThreads becauseTimeoutExceeded(long timeout, TimeUnit timeUnit) {
 
     return new UnfinishedThreads(format(MESSAGE, timeout, timeUnit, threadDump()));

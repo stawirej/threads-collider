@@ -14,6 +14,15 @@ public interface OptionalActionBuilder {
   TimesBuilder withAction(Runnable action);
 
   /**
+   * Sets action to be executed by {@link MultiThreadsCollider}.
+   *
+   * @param action action to be executed by {@link MultiThreadsCollider}
+   * @param actionName description of action used when reporting deadlocked threads.
+   * @return {@link TimesBuilder}
+   */
+  TimesBuilder withAction(Runnable action, String actionName);
+
+  /**
    * Sets await termination timeout for executor service used by {@link MultiThreadsCollider}.
    *
    * @param timeout await termination timeout for executor service used by {@link

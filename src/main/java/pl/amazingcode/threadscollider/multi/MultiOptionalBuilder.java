@@ -20,7 +20,9 @@ public interface MultiOptionalBuilder {
    * same value as timeout for {@link MultiThreadsCollider#collide()}.
    *
    * @param timeout - await termination timeout for executor service used by {@link
-   *     ThreadsCollider}.
+   *     MultiThreadsCollider} and for running threads. In case of presence of running threads
+   *     timeout, total {@link MultiThreadsCollider} timeout is sum of executor service timeout and
+   *     running threads timeout (timeout * 2).
    * @return {@link MultiTimeUnitBuilder}
    */
   MultiTimeUnitBuilder withAwaitTerminationTimeout(long timeout);

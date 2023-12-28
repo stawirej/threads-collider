@@ -3,6 +3,7 @@ package pl.amazingcode.threadscollider.multi;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +28,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
         return thread;
       };
 
-  private final List<Runnable> runnables;
+  private final List<Action> runnables;
   private final List<Integer> times;
   private final ExecutorService executor;
   private final int threadsCount;
@@ -39,7 +40,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
   private final Consumer<Exception> threadsExceptionsConsumer;
 
   private MultiThreadsCollider(
-      List<Runnable> runnables,
+      List<Action> runnables,
       List<Integer> times,
       int threadsCount,
       long timeout,
@@ -67,14 +68,14 @@ public final class MultiThreadsCollider implements AutoCloseable {
   public void collide() {
 
     try {
-      Iterator<Runnable> runnableIterator = runnables.iterator();
+      Iterator<Action> runnableIterator = runnables.iterator();
       Iterator<Integer> timesIterator = times.iterator();
 
       while (runnableIterator.hasNext()) {
-        Runnable runnable = runnableIterator.next();
+        Action action = runnableIterator.next();
         int times = timesIterator.next();
         for (int i = 0; i < times; i++) {
-          executor.execute(() -> decorate(runnable));
+          executor.execute(() -> decorate(action));
         }
       }
 
@@ -92,9 +93,11 @@ public final class MultiThreadsCollider implements AutoCloseable {
     }
   }
 
-  private void decorate(Runnable runnable) {
+  private void decorate(Action action) {
 
     try {
+      setThreadName(action.actionName());
+
       startedThreadsCount.incrementAndGet();
 
       while (startedThreadsCount.get() < threadsCount)
@@ -103,12 +106,20 @@ public final class MultiThreadsCollider implements AutoCloseable {
       while (spinLock.get())
         ;
 
-      runnable.run();
+      action.runnable().run();
     } catch (Exception exception) {
       consumeException(exception);
     } finally {
       runningThreadsLatch.countDown();
     }
+  }
+
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+  private void setThreadName(Optional<String> actionName) {
+
+    actionName
+        .map(name -> Thread.currentThread().getName() + " [" + name + "]")
+        .ifPresent(Thread.currentThread()::setName);
   }
 
   /** Shuts down the executor service and waits for all threads to finish by given timeout. */
@@ -137,7 +148,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
           MultiTimeUnitBuilder,
           MultiOptionalBuilder {
 
-    private final List<Runnable> runnables;
+    private final List<Action> runnables;
     private final List<Integer> times;
     private long timeout = DEFAULT_TIMEOUT;
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
@@ -162,7 +173,14 @@ public final class MultiThreadsCollider implements AutoCloseable {
     @Override
     public TimesBuilder withAction(Runnable runnable) {
 
-      this.runnables.add(runnable);
+      this.runnables.add(Action.of(runnable));
+      return this;
+    }
+
+    @Override
+    public TimesBuilder withAction(Runnable runnable, String actionName) {
+
+      this.runnables.add(Action.of(runnable, actionName));
       return this;
     }
 
