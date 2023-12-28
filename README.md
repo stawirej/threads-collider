@@ -191,3 +191,4 @@ testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "
 - [ ] Update javadocs for timeout methods for ThreadsCollider
 - [ ] Check negative times method arguments
 - [ ] Check processors count
+- [ ] Thread factory to commons
