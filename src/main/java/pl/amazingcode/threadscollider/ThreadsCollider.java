@@ -3,7 +3,6 @@ package pl.amazingcode.threadscollider;
 import static pl.amazingcode.threadscollider.ThreadFactory.THREAD_FACTORY;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
@@ -56,10 +55,8 @@ public final class ThreadsCollider implements AutoCloseable {
   public void collide() {
 
     try {
-      Iterator<Action> actionIterator = actions.iterator();
 
-      while (actionIterator.hasNext()) {
-        Action action = actionIterator.next();
+      for (Action action : actions) {
         for (int i = 0; i < action.times(); i++) {
           executor.execute(() -> decorate(action));
         }
