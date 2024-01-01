@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.multi;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
+import static pl.amazingcode.threadscollider.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Scenarios {

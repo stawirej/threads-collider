@@ -1,4 +1,4 @@
-package pl.amazingcode.threadscollider.multi;
+package pl.amazingcode.threadscollider;
 
 /** Intermediary builder for {@link ThreadsCollider}. */
 public interface MandatoryActionBuilder {

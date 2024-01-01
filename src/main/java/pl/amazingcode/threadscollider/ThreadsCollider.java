@@ -1,4 +1,6 @@
-package pl.amazingcode.threadscollider.multi;
+package pl.amazingcode.threadscollider;
+
+import static pl.amazingcode.threadscollider.ThreadFactory.THREAD_FACTORY;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,26 +9,16 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import pl.amazingcode.threadscollider.exceptions.ThreadsColliderFailure;
-import pl.amazingcode.threadscollider.exceptions.UnfinishedThreads;
 
 /** Allows to execute multiple actions by all threads at the "same time". */
 public final class ThreadsCollider implements AutoCloseable {
 
   private static final long DEFAULT_TIMEOUT = 60;
   private static final TimeUnit DEFAULT_TIME_UNIT = TimeUnit.SECONDS;
-  private static final ThreadFactory THREAD_FACTORY =
-      runnable -> {
-        Thread thread = new Thread(runnable);
-        thread.setDaemon(true);
-        thread.setName("collider-pool-" + thread.getName().toLowerCase());
-        return thread;
-      };
 
   private final List<Action> actions;
   private final ExecutorService executor;

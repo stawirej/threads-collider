@@ -1,15 +1,15 @@
 package pl.amazingcode.threadscollider.single;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static pl.amazingcode.threadscollider.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 import static pl.amazingcode.threadscollider.fixtures.AppleExamples.RED_DELICIOUS;
-import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.UniqueApples;
-import pl.amazingcode.threadscollider.multi.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Scenarios {

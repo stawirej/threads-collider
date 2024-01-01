@@ -1,11 +1,6 @@
-package pl.amazingcode.threadscollider.exceptions;
+package pl.amazingcode.threadscollider;
 
-import pl.amazingcode.threadscollider.multi.ThreadsCollider;
-
-/**
- * Exception thrown when {@link pl.amazingcode.threadscollider.multi.ThreadsCollider} or {@link
- * ThreadsCollider} fails.
- */
+/** Exception thrown when {@link ThreadsCollider} or {@link ThreadsCollider} fails. */
 public final class ThreadsColliderFailure extends RuntimeException {
 
   private ThreadsColliderFailure(Throwable cause) {

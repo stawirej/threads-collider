@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.single;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
+import static pl.amazingcode.threadscollider.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
-import pl.amazingcode.threadscollider.multi.ThreadsCollider;
+import pl.amazingcode.threadscollider.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class UseCases_Scenarios {
