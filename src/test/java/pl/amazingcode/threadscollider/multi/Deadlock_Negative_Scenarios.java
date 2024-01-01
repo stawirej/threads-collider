@@ -10,13 +10,13 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInfo;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class Deadlock_Negative_Scenarios {
 
-  private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
   private static final int TEST_REPETITIONS = 10;
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);
@@ -65,9 +65,9 @@ final class Deadlock_Negative_Scenarios {
     try (ThreadsCollider collider =
         threadsCollider()
             .withAction(() -> update1(list1, list2))
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withAction(() -> update2(list2, list1))
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withThreadsExceptionsConsumer(exceptions::add)
             .withAwaitTerminationTimeout(100)
             .asMilliseconds()

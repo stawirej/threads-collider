@@ -20,6 +20,10 @@ class Action {
 
   static Action of(Runnable runnable, String actionName, int times) {
 
+    if (times < 1) {
+      throw new IllegalArgumentException("Repeat action at least once.");
+    }
+
     return new Action(runnable, Optional.ofNullable(actionName), times);
   }
 

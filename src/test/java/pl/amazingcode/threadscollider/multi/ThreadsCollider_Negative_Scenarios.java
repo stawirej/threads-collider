@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInfo;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.ThreadUnsafeCounter;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
@@ -14,7 +15,6 @@ import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 final class ThreadsCollider_Negative_Scenarios {
 
   private static final int TEST_REPETITIONS = 200;
-  private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
 
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);
@@ -35,9 +35,9 @@ final class ThreadsCollider_Negative_Scenarios {
     try (ThreadsCollider threadsCollider =
         ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
             .withAction(counter::increment)
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withAction(counter::decrement)
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .build()) {
 
       threadsCollider.collide();
@@ -60,9 +60,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1_000_000)
               .asNanoseconds()
               .build()) {
@@ -84,9 +84,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1_000)
               .asMicroseconds()
               .build()) {
@@ -108,9 +108,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1)
               .asMilliseconds()
               .build()) {
@@ -132,9 +132,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1)
               .asSeconds()
               .build()) {
@@ -156,9 +156,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1)
               .asMinutes()
               .build()) {
@@ -180,9 +180,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1)
               .asHours()
               .build()) {
@@ -204,9 +204,9 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAction(counter::decrement)
-              .times(ACTION_THREADS_COUNT)
+              .times(Processors.HALF)
               .withAwaitTerminationTimeout(1)
               .asDays()
               .build()) {

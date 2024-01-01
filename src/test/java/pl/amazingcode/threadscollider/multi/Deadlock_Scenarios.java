@@ -13,12 +13,12 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.condition.EnabledIf;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class Deadlock_Scenarios {
 
-  private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
   private List<Integer> list1;
   private List<Integer> list2;
   private Lock lock1;
@@ -100,9 +100,9 @@ final class Deadlock_Scenarios {
     try (ThreadsCollider collider =
         threadsCollider()
             .withAction(() -> update1(list1, list2), "update1")
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withAction(() -> update2(list2, list1), "update2")
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withThreadsExceptionsConsumer(exceptions::add)
             .withAwaitTerminationTimeout(100)
             .asMilliseconds()
@@ -126,9 +126,9 @@ final class Deadlock_Scenarios {
     try (ThreadsCollider collider =
         threadsCollider()
             .withAction(() -> update1WithLocks(list1, list2), "update1WithLocks")
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withAction(() -> update2WithLocks(list2, list1), "update2WithLocks")
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withThreadsExceptionsConsumer(exceptions::add)
             .withAwaitTerminationTimeout(100)
             .asMilliseconds()

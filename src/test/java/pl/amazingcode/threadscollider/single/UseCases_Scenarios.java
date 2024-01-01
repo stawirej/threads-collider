@@ -13,12 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class UseCases_Scenarios {
-
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @RepeatedTest(10)
   void Thread_safe_adding_to_set() {
@@ -27,7 +26,7 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withAction(() -> set.add("foo")).times(AVAILABLE_PROCESSORS).build()) {
+        threadsCollider().withAction(() -> set.add("foo")).times(Processors.ALL).build()) {
 
       threadsCollider.collide();
     }
@@ -44,7 +43,7 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withAction(() -> list.add("bar")).times(AVAILABLE_PROCESSORS).build()) {
+        threadsCollider().withAction(() -> list.add("bar")).times(Processors.ALL).build()) {
 
       threadsCollider.collide();
     }
@@ -60,10 +59,7 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider()
-            .withAction(() -> map.put("foo", "bar"))
-            .times(AVAILABLE_PROCESSORS)
-            .build()) {
+        threadsCollider().withAction(() -> map.put("foo", "bar")).times(Processors.ALL).build()) {
 
       threadsCollider.collide();
     }
@@ -81,7 +77,7 @@ final class UseCases_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(() -> map.putIfAbsent("foo", "bar"))
-            .times(AVAILABLE_PROCESSORS)
+            .times(Processors.ALL)
             .build()) {
 
       threadsCollider.collide();

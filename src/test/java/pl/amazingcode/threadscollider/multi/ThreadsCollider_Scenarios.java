@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -20,11 +21,8 @@ final class ThreadsCollider_Scenarios {
     // Given
     List<String> list = Collections.synchronizedList(new ArrayList<>());
     List<Exception> exceptions = new ArrayList<>();
-    int threadsCount = Runtime.getRuntime().availableProcessors();
-    int addThreadsCount = threadsCount / 2;
-    int removeThreadsCount = threadsCount / 2;
 
-    for (int i = 0; i < threadsCount; i++) {
+    for (int i = 0; i < Processors.ALL; i++) {
       list.add("text");
     }
 
@@ -32,9 +30,9 @@ final class ThreadsCollider_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(() -> list.add("text"))
-            .times(addThreadsCount)
+            .times(Processors.HALF)
             .withAction(() -> list.remove("text"))
-            .times(removeThreadsCount)
+            .times(Processors.HALF)
             .withThreadsExceptionsConsumer(exceptions::add)
             .build()) {
 
@@ -43,7 +41,7 @@ final class ThreadsCollider_Scenarios {
 
     // Then
     then(exceptions).isEmpty();
-    then(list).hasSize(threadsCount).containsOnly("text");
+    then(list).hasSize(Processors.ALL).containsOnly("text");
   }
 
   @Nested
@@ -54,11 +52,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -66,9 +61,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1_000_000)
               .asNanoseconds()
@@ -79,7 +74,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -87,11 +82,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -99,9 +91,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1_000)
               .asMicroseconds()
@@ -112,7 +104,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -120,11 +112,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -132,9 +121,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1)
               .asMilliseconds()
@@ -145,7 +134,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -153,11 +142,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -165,9 +151,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1)
               .asSeconds()
@@ -178,7 +164,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -186,11 +172,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -198,9 +181,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1)
               .asMinutes()
@@ -211,7 +194,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -219,11 +202,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -231,9 +211,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1)
               .asHours()
@@ -244,7 +224,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
 
     @RepeatedTest(10)
@@ -252,11 +232,8 @@ final class ThreadsCollider_Scenarios {
       // Given
       List<String> list = Collections.synchronizedList(new ArrayList<>());
       List<Exception> exceptions = new ArrayList<>();
-      int threadsCount = Runtime.getRuntime().availableProcessors();
-      int addThreadsCount = threadsCount / 2;
-      int removeThreadsCount = threadsCount / 2;
 
-      for (int i = 0; i < threadsCount; i++) {
+      for (int i = 0; i < Processors.ALL; i++) {
         list.add("text");
       }
 
@@ -264,9 +241,9 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> list.add("text"))
-              .times(addThreadsCount)
+              .times(Processors.HALF)
               .withAction(() -> list.remove("text"))
-              .times(removeThreadsCount)
+              .times(Processors.HALF)
               .withThreadsExceptionsConsumer(exceptions::add)
               .withAwaitTerminationTimeout(1)
               .asDays()
@@ -277,7 +254,7 @@ final class ThreadsCollider_Scenarios {
 
       // Then
       then(exceptions).isEmpty();
-      then(list).hasSize(threadsCount).containsOnly("text");
+      then(list).hasSize(Processors.ALL).containsOnly("text");
     }
   }
 }

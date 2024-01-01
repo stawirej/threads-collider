@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInfo;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.UniqueApples;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
@@ -17,7 +18,6 @@ import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 final class ThreadsCollider_Negative_Scenarios {
 
   private static final int TEST_REPETITIONS = 200;
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);
@@ -58,7 +58,7 @@ final class ThreadsCollider_Negative_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-            .times(AVAILABLE_PROCESSORS)
+            .times(Processors.ALL)
             .build()) {
       threadsCollider.collide();
     }
@@ -80,7 +80,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1_000_000)
               .asNanoseconds()
               .build()) {
@@ -102,7 +102,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1_000)
               .asMicroseconds()
               .build()) {
@@ -123,7 +123,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asMilliseconds()
               .build()) {
@@ -144,7 +144,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asSeconds()
               .build()) {
@@ -165,7 +165,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asMinutes()
               .build()) {
@@ -186,7 +186,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asHours()
               .build()) {
@@ -207,7 +207,7 @@ final class ThreadsCollider_Negative_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.addUnSynchronized(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asDays()
               .build()) {

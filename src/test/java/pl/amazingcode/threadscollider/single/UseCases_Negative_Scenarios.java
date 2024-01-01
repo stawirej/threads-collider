@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInfo;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 
@@ -22,7 +23,6 @@ final class UseCases_Negative_Scenarios {
   private static final int TEST_REPETITIONS = 10;
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @AfterAll
   static void afterAll() {
@@ -38,7 +38,7 @@ final class UseCases_Negative_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withAction(() -> set.add("foo")).times(AVAILABLE_PROCESSORS).build()) {
+        threadsCollider().withAction(() -> set.add("foo")).times(Processors.ALL).build()) {
 
       threadsCollider.collide();
     }
@@ -73,10 +73,7 @@ final class UseCases_Negative_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider()
-            .withAction(() -> map.put("foo", "bar"))
-            .times(AVAILABLE_PROCESSORS)
-            .build()) {
+        threadsCollider().withAction(() -> map.put("foo", "bar")).times(Processors.ALL).build()) {
 
       threadsCollider.collide();
     }
@@ -95,7 +92,7 @@ final class UseCases_Negative_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(() -> map.putIfAbsent("foo", "bar"))
-            .times(AVAILABLE_PROCESSORS)
+            .times(Processors.ALL)
             .build()) {
 
       threadsCollider.collide();

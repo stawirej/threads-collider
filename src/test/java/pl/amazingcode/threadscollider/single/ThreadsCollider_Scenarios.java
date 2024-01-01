@@ -8,13 +8,12 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.UniqueApples;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Scenarios {
-
-  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @RepeatedTest(10)
   void Build_threads_collider_with_user_defined_threads_count() {
@@ -41,7 +40,7 @@ final class ThreadsCollider_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-            .times(AVAILABLE_PROCESSORS)
+            .times(Processors.ALL)
             .build()) {
       threadsCollider.collide();
     }
@@ -62,7 +61,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1_000_000)
               .asNanoseconds()
               .build()) {
@@ -82,7 +81,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1_000)
               .asMicroseconds()
               .build()) {
@@ -102,7 +101,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asMilliseconds()
               .build()) {
@@ -122,7 +121,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asSeconds()
               .build()) {
@@ -142,7 +141,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asMinutes()
               .build()) {
@@ -162,7 +161,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asHours()
               .build()) {
@@ -182,7 +181,7 @@ final class ThreadsCollider_Scenarios {
       try (ThreadsCollider threadsCollider =
           threadsCollider()
               .withAction(() -> uniqueApples.add(RED_DELICIOUS))
-              .times(AVAILABLE_PROCESSORS)
+              .times(Processors.ALL)
               .withAwaitTerminationTimeout(1)
               .asDays()
               .build()) {
