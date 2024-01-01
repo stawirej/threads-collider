@@ -9,20 +9,18 @@ class Action {
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   private final Optional<String> actionName;
 
-  private Action(Runnable runnable, Optional<String> actionName) {
+  private final int times;
+
+  private Action(Runnable runnable, Optional<String> actionName, int times) {
 
     this.runnable = runnable;
     this.actionName = actionName;
+    this.times = times;
   }
 
-  static Action of(Runnable runnable, String actionName) {
+  static Action of(Runnable runnable, String actionName, int times) {
 
-    return new Action(runnable, Optional.ofNullable(actionName));
-  }
-
-  static Action of(Runnable runnable) {
-
-    return new Action(runnable, Optional.empty());
+    return new Action(runnable, Optional.ofNullable(actionName), times);
   }
 
   Runnable runnable() {
@@ -33,5 +31,10 @@ class Action {
   Optional<String> actionName() {
 
     return actionName;
+  }
+
+  int times() {
+
+    return times;
   }
 }

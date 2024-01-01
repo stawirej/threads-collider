@@ -28,8 +28,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
         return thread;
       };
 
-  private final List<Action> runnables;
-  private final List<Integer> times;
+  private final List<Action> actions;
   private final ExecutorService executor;
   private final int threadsCount;
   private final AtomicInteger startedThreadsCount;
@@ -40,16 +39,13 @@ public final class MultiThreadsCollider implements AutoCloseable {
   private final Consumer<Exception> threadsExceptionsConsumer;
 
   private MultiThreadsCollider(
-      List<Action> runnables,
-      List<Integer> times,
-      int threadsCount,
+      List<Action> actions,
       long timeout,
       TimeUnit timeUnit,
       Consumer<Exception> threadsExceptionsConsumer) {
 
-    this.runnables = runnables;
-    this.times = times;
-    this.threadsCount = threadsCount;
+    this.actions = actions;
+    this.threadsCount = actions.stream().mapToInt(Action::times).sum();
     this.executor = Executors.newFixedThreadPool(threadsCount, THREAD_FACTORY);
     this.spinLock = new AtomicBoolean(true);
     this.startedThreadsCount = new AtomicInteger(0);
@@ -68,13 +64,11 @@ public final class MultiThreadsCollider implements AutoCloseable {
   public void collide() {
 
     try {
-      Iterator<Action> runnableIterator = runnables.iterator();
-      Iterator<Integer> timesIterator = times.iterator();
+      Iterator<Action> actionIterator = actions.iterator();
 
-      while (runnableIterator.hasNext()) {
-        Action action = runnableIterator.next();
-        int times = timesIterator.next();
-        for (int i = 0; i < times; i++) {
+      while (actionIterator.hasNext()) {
+        Action action = actionIterator.next();
+        for (int i = 0; i < action.times(); i++) {
           executor.execute(() -> decorate(action));
         }
       }
@@ -148,16 +142,16 @@ public final class MultiThreadsCollider implements AutoCloseable {
           MultiTimeUnitBuilder,
           MultiOptionalBuilder {
 
-    private final List<Action> runnables;
-    private final List<Integer> times;
+    private final List<Action> actions;
+    private Runnable runnable;
+    private String actionName;
     private long timeout = DEFAULT_TIMEOUT;
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
     private Consumer<Exception> threadsExceptionsConsumer = (exception) -> {};
 
     private MultiThreadsColliderBuilder() {
 
-      this.runnables = new ArrayList<>();
-      this.times = new ArrayList<>();
+      this.actions = new ArrayList<>();
     }
 
     /**
@@ -173,21 +167,24 @@ public final class MultiThreadsCollider implements AutoCloseable {
     @Override
     public TimesBuilder withAction(Runnable runnable) {
 
-      this.runnables.add(Action.of(runnable));
+      this.runnable = runnable;
+      this.actionName = null;
       return this;
     }
 
     @Override
     public TimesBuilder withAction(Runnable runnable, String actionName) {
 
-      this.runnables.add(Action.of(runnable, actionName));
+      this.runnable = runnable;
+      this.actionName = actionName;
       return this;
     }
 
     @Override
     public MultiThreadsColliderBuilder times(int times) {
 
-      this.times.add(times);
+      Action action = Action.of(runnable, actionName, times);
+      this.actions.add(action);
       return this;
     }
 
@@ -258,10 +255,7 @@ public final class MultiThreadsCollider implements AutoCloseable {
     @Override
     public MultiThreadsCollider build() {
 
-      int threadsCount = times.stream().mapToInt(Integer::intValue).sum();
-
-      return new MultiThreadsCollider(
-          runnables, times, threadsCount, timeout, timeUnit, threadsExceptionsConsumer);
+      return new MultiThreadsCollider(actions, timeout, timeUnit, threadsExceptionsConsumer);
     }
   }
 }
