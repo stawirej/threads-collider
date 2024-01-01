@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.multi;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,8 +96,8 @@ final class Deadlock_Scenarios {
     List<Exception> exceptions = new ArrayList<>();
 
     // When
-    try (MultiThreadsCollider collider =
-        multiThreadsCollider()
+    try (ThreadsCollider collider =
+        threadsCollider()
             .withAction(() -> update1(list1, list2), "update1")
             .times(ACTION_THREADS_COUNT)
             .withAction(() -> update2(list2, list1), "update2")
@@ -122,8 +122,8 @@ final class Deadlock_Scenarios {
     List<Exception> exceptions = new ArrayList<>();
 
     // When
-    try (MultiThreadsCollider collider =
-        multiThreadsCollider()
+    try (ThreadsCollider collider =
+        threadsCollider()
             .withAction(() -> update1WithLocks(list1, list2), "update1WithLocks")
             .times(ACTION_THREADS_COUNT)
             .withAction(() -> update2WithLocks(list2, list1), "update2WithLocks")

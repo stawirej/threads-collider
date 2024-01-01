@@ -8,11 +8,11 @@ import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.concurrent.TimeUnit;
+import pl.amazingcode.threadscollider.multi.ThreadsCollider;
 
 /**
- * Exception thrown when {@link pl.amazingcode.threadscollider.single.ThreadsCollider} or {@link
- * pl.amazingcode.threadscollider.multi.MultiThreadsCollider} has not finished threads within the
- * specified timeout.
+ * Exception thrown when {@link pl.amazingcode.threadscollider.multi.ThreadsCollider} or {@link
+ * ThreadsCollider} has not finished threads within the specified timeout.
  */
 public final class UnfinishedThreads extends RuntimeException {
 

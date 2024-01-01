@@ -1,6 +1,6 @@
 package pl.amazingcode.threadscollider.single;
 
-import static pl.amazingcode.threadscollider.single.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.TestInfo;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
+import pl.amazingcode.threadscollider.multi.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class UseCases_Negative_Scenarios {
@@ -21,6 +22,7 @@ final class UseCases_Negative_Scenarios {
   private static final int TEST_REPETITIONS = 10;
   private static final CollisionsAssert collisionsAssert =
       CollisionsAssert.newInstance(TEST_REPETITIONS);
+  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @AfterAll
   static void afterAll() {
@@ -35,8 +37,10 @@ final class UseCases_Negative_Scenarios {
     Set<String> set = new HashSet<>();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> set.add("foo"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider().withAction(() -> set.add("foo")).times(AVAILABLE_PROCESSORS).build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -52,8 +56,9 @@ final class UseCases_Negative_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withThreadsCount(threadsCount).build()) {
-      threadsCollider.collide(() -> list.add("bar"));
+        threadsCollider().withAction(() -> list.add("bar")).times(threadsCount).build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -67,8 +72,13 @@ final class UseCases_Negative_Scenarios {
     Map<String, String> map = new HashMap<>();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> map.put("foo", "bar"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
+            .withAction(() -> map.put("foo", "bar"))
+            .times(AVAILABLE_PROCESSORS)
+            .build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -82,8 +92,13 @@ final class UseCases_Negative_Scenarios {
     Map<String, String> map = new HashMap<>();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> map.putIfAbsent("foo", "bar"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
+            .withAction(() -> map.putIfAbsent("foo", "bar"))
+            .times(AVAILABLE_PROCESSORS)
+            .build()) {
+
+      threadsCollider.collide();
     }
 
     // Then

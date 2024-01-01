@@ -1,8 +1,10 @@
 package pl.amazingcode.threadscollider.exceptions;
 
+import pl.amazingcode.threadscollider.multi.ThreadsCollider;
+
 /**
- * Exception thrown when {@link pl.amazingcode.threadscollider.single.ThreadsCollider} or {@link
- * pl.amazingcode.threadscollider.multi.MultiThreadsCollider} fails.
+ * Exception thrown when {@link pl.amazingcode.threadscollider.multi.ThreadsCollider} or {@link
+ * ThreadsCollider} fails.
  */
 public final class ThreadsColliderFailure extends RuntimeException {
 

@@ -1,6 +1,6 @@
 package pl.amazingcode.threadscollider.multi;
 
-import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +61,8 @@ final class Deadlock_Negative_Scenarios {
     List<Exception> exceptions = new ArrayList<>();
 
     // When
-    try (MultiThreadsCollider collider =
-        multiThreadsCollider()
+    try (ThreadsCollider collider =
+        threadsCollider()
             .withAction(() -> update1(list1, list2))
             .times(ACTION_THREADS_COUNT)
             .withAction(() -> update2(list2, list1))

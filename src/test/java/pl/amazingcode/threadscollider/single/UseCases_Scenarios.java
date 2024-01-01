@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.single;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.single.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.multi.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class UseCases_Scenarios {
+
+  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @RepeatedTest(10)
   void Thread_safe_adding_to_set() {
@@ -23,8 +26,10 @@ final class UseCases_Scenarios {
     Set<String> set = Collections.synchronizedSet(new HashSet<>());
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> set.add("foo"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider().withAction(() -> set.add("foo")).times(AVAILABLE_PROCESSORS).build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -39,8 +44,9 @@ final class UseCases_Scenarios {
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withThreadsCount(threadsCount).build()) {
-      threadsCollider.collide(() -> list.add("bar"));
+        threadsCollider().withAction(() -> list.add("bar")).times(AVAILABLE_PROCESSORS).build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -53,8 +59,13 @@ final class UseCases_Scenarios {
     Map<String, String> map = new ConcurrentHashMap<>();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> map.put("foo", "bar"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
+            .withAction(() -> map.put("foo", "bar"))
+            .times(AVAILABLE_PROCESSORS)
+            .build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -67,8 +78,13 @@ final class UseCases_Scenarios {
     Map<String, String> map = new ConcurrentHashMap<>();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> map.putIfAbsent("foo", "bar"));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
+            .withAction(() -> map.putIfAbsent("foo", "bar"))
+            .times(AVAILABLE_PROCESSORS)
+            .build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -88,11 +104,12 @@ final class UseCases_Scenarios {
     // When
     try (ThreadsCollider threadsCollider =
         threadsCollider()
-            .withThreadsCount(threadsCount)
+            .withAction(failingRunnable)
+            .times(threadsCount)
             .withThreadsExceptionsConsumer(exceptions::add)
             .build()) {
 
-      threadsCollider.collide(failingRunnable);
+      threadsCollider.collide();
     }
 
     // Then
@@ -112,11 +129,12 @@ final class UseCases_Scenarios {
     // When
     try (ThreadsCollider threadsCollider =
         threadsCollider()
-            .withThreadsCount(threadsCount)
+            .withAction(failingRunnable)
+            .times(threadsCount)
             .withThreadsExceptionsConsumer(exceptions::add)
             .build()) {
 
-      threadsCollider.collide(failingRunnable);
+      threadsCollider.collide();
     }
 
     // Then

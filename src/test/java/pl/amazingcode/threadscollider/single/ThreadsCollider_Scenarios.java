@@ -2,16 +2,19 @@ package pl.amazingcode.threadscollider.single;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static pl.amazingcode.threadscollider.fixtures.AppleExamples.RED_DELICIOUS;
-import static pl.amazingcode.threadscollider.single.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import pl.amazingcode.threadscollider.fixtures.UniqueApples;
+import pl.amazingcode.threadscollider.multi.ThreadsCollider;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class ThreadsCollider_Scenarios {
+
+  private static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
   @RepeatedTest(10)
   void Build_threads_collider_with_user_defined_threads_count() {
@@ -19,8 +22,10 @@ final class ThreadsCollider_Scenarios {
     UniqueApples uniqueApples = UniqueApples.newInstance();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withThreadsCount(10).build()) {
-      threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider().withAction(() -> uniqueApples.add(RED_DELICIOUS)).times(10).build()) {
+
+      threadsCollider.collide();
     }
 
     // Then
@@ -33,8 +38,12 @@ final class ThreadsCollider_Scenarios {
     UniqueApples uniqueApples = UniqueApples.newInstance();
 
     // When
-    try (ThreadsCollider threadsCollider = threadsCollider().withAvailableProcessors().build()) {
-      threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
+            .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+            .times(AVAILABLE_PROCESSORS)
+            .build()) {
+      threadsCollider.collide();
     }
 
     // Then
@@ -52,11 +61,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1_000_000)
               .asNanoseconds()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -71,11 +81,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1_000)
               .asMicroseconds()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -90,11 +101,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1)
               .asMilliseconds()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -109,11 +121,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1)
               .asSeconds()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -128,11 +141,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1)
               .asMinutes()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -147,11 +161,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1)
               .asHours()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then
@@ -166,11 +181,12 @@ final class ThreadsCollider_Scenarios {
       // When
       try (ThreadsCollider threadsCollider =
           threadsCollider()
-              .withAvailableProcessors()
+              .withAction(() -> uniqueApples.add(RED_DELICIOUS))
+              .times(AVAILABLE_PROCESSORS)
               .withAwaitTerminationTimeout(1)
               .asDays()
               .build()) {
-        threadsCollider.collide(() -> uniqueApples.add(RED_DELICIOUS));
+        threadsCollider.collide();
       }
 
       // Then

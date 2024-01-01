@@ -10,7 +10,7 @@ import pl.amazingcode.threadscollider.fixtures.ThreadUnsafeCounter;
 import pl.amazingcode.threadscollider.fixtures.assertobject.CollisionsAssert;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-final class MultiThreadsCollider_Negative_Scenarios {
+final class ThreadsCollider_Negative_Scenarios {
 
   private static final int TEST_REPETITIONS = 200;
   private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
@@ -31,8 +31,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
     ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
     // When
-    try (MultiThreadsCollider threadsCollider =
-        MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+    try (ThreadsCollider threadsCollider =
+        ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
             .withAction(counter::increment)
             .times(ACTION_THREADS_COUNT)
             .withAction(counter::decrement)
@@ -56,8 +56,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -80,8 +80,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -104,8 +104,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -128,8 +128,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -152,8 +152,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -176,8 +176,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)
@@ -200,8 +200,8 @@ final class MultiThreadsCollider_Negative_Scenarios {
       ThreadUnsafeCounter counter = new ThreadUnsafeCounter();
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          ThreadsCollider.ThreadsColliderBuilder.threadsCollider()
               .withAction(counter::increment)
               .times(ACTION_THREADS_COUNT)
               .withAction(counter::decrement)

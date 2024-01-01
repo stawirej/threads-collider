@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.multi;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-final class MultiThreadsCollider_Scenarios {
+final class ThreadsCollider_Scenarios {
 
   @RepeatedTest(10)
   void Build_multi_threads_collider_list() {
@@ -28,8 +28,8 @@ final class MultiThreadsCollider_Scenarios {
     }
 
     // When
-    try (MultiThreadsCollider threadsCollider =
-        multiThreadsCollider()
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
             .withAction(() -> list.add("text"))
             .times(addThreadsCount)
             .withAction(() -> list.remove("text"))
@@ -62,8 +62,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -95,8 +95,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -128,8 +128,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -161,8 +161,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -194,8 +194,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -227,8 +227,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))
@@ -260,8 +260,8 @@ final class MultiThreadsCollider_Scenarios {
       }
 
       // When
-      try (MultiThreadsCollider threadsCollider =
-          multiThreadsCollider()
+      try (ThreadsCollider threadsCollider =
+          threadsCollider()
               .withAction(() -> list.add("text"))
               .times(addThreadsCount)
               .withAction(() -> list.remove("text"))

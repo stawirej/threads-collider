@@ -1,4 +1,4 @@
-package pl.amazingcode.threadscollider.single;
+package pl.amazingcode.threadscollider.multi;
 
 /** Intermediary builder for {@link ThreadsCollider}. */
 public interface TimeUnitBuilder {
@@ -7,7 +7,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as nanoseconds.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asNanoseconds();
 
@@ -15,7 +15,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as microseconds.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asMicroseconds();
 
@@ -23,7 +23,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as milliseconds.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asMilliseconds();
 
@@ -31,7 +31,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as seconds.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asSeconds();
 
@@ -39,7 +39,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as minutes.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asMinutes();
 
@@ -47,7 +47,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as hours.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asHours();
 
@@ -55,7 +55,7 @@ public interface TimeUnitBuilder {
    * Sets await termination timeout time unit for executor service used by {@link ThreadsCollider}
    * as days.
    *
-   * @return {@link Builder}
+   * @return {@link OptionalBuilder}
    */
   OptionalBuilder asDays();
 }

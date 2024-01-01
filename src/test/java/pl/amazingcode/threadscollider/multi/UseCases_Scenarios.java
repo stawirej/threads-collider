@@ -1,7 +1,7 @@
 package pl.amazingcode.threadscollider.multi;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static pl.amazingcode.threadscollider.multi.MultiThreadsCollider.MultiThreadsColliderBuilder.multiThreadsCollider;
+import static pl.amazingcode.threadscollider.multi.ThreadsCollider.ThreadsColliderBuilder.threadsCollider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ final class UseCases_Scenarios {
     List<Exception> exceptions = new ArrayList<>();
 
     // When
-    try (MultiThreadsCollider threadsCollider =
-        multiThreadsCollider()
+    try (ThreadsCollider threadsCollider =
+        threadsCollider()
             .withAction(counter::increment)
             .times(ACTION_THREADS_COUNT)
             .withAction(counter::decrement)

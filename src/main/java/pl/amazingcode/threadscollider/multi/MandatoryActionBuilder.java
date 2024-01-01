@@ -1,6 +1,6 @@
 package pl.amazingcode.threadscollider.multi;
 
-/** Intermediary builder for {@link MultiThreadsCollider}. */
+/** Intermediary builder for {@link ThreadsCollider}. */
 public interface MandatoryActionBuilder {
 
   /**
