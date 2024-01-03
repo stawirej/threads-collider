@@ -56,11 +56,7 @@ public final class ThreadsCollider implements AutoCloseable {
 
     try {
 
-      for (Action action : actions) {
-        for (int i = 0; i < action.times(); i++) {
-          executor.execute(() -> decorate(action));
-        }
-      }
+      startActions();
 
       while (startedThreadsCount.get() < threadsCount)
         ;
@@ -73,6 +69,15 @@ public final class ThreadsCollider implements AutoCloseable {
 
     } catch (InterruptedException exception) {
       throw ThreadsColliderFailure.from(exception);
+    }
+  }
+
+  private void startActions() {
+
+    for (Action action : actions) {
+      for (int i = 0; i < action.times(); i++) {
+        executor.execute(() -> decorate(action));
+      }
     }
   }
 
