@@ -11,17 +11,19 @@ chances of manifesting issues caused by a race condition.
 void Thread_safe_adding_to_list() {
     // Given
     List<String> list = new ArrayList<>();    // <-- NOT thread safe
-    int threadsCount = Runtime.getRuntime().availableProcessors();
 
     // When
     try (ThreadsCollider threadsCollider =
-             threadsCollider().withThreadsCount(threadsCount).build()) {
+             threadsCollider()
+                 .withAction(() -> list.add("bar"))
+                 .times(Processors.ALL)   // run action on all available processors
+                 .build()) {
 
-        threadsCollider.collide(() -> list.add("bar")); // add "bar" to list multiple times simultaneously
+        threadsCollider.collide();
     }
 
     // Then
-    then(list).hasSize(threadsCount).containsOnly("bar");
+    then(list).hasSize(Processors.ALL).containsOnly("bar");
 }
 ```
 
@@ -48,18 +50,20 @@ but the following element(s) were unexpected:
 @RepeatedTest(10)
 void Thread_safe_adding_to_list() {
     // Given
-    List<String> list = Collections.synchronizedList(new ArrayList<>()); // <-- thread safe
-    int threadsCount = Runtime.getRuntime().availableProcessors();
+    List<String> list = Collections.synchronizedList(new ArrayList<>());  // <-- thread safe
 
     // When
     try (ThreadsCollider threadsCollider =
-             threadsCollider().withThreadsCount(threadsCount).build()) {
+             threadsCollider()
+                 .withAction(() -> list.add("bar"))
+                 .times(Processors.ALL)   // run action on all available processors
+                 .build()) {
 
-        threadsCollider.collide(() -> list.add("bar"));
+        threadsCollider.collide();
     }
 
     // Then
-    then(list).hasSize(threadsCount).containsOnly("bar");
+    then(list).hasSize(Processors.ALL).containsOnly("bar");
 }
 ```
 
@@ -72,35 +76,34 @@ void Thread_safe_adding_to_list() {
 
 ```java
 
-@RepeatedTest(100)
+@RepeatedTest(10)
     // run test multiple times to increase chance of manifesting concurrency issues
-void Adding_unique_apples_is_thread_safe() {
+void Thread_safe_adding_to_set() {
     // Given
-    UniqueApples uniqueApples = UniqueApples.newInstance();
-    List<Exception> exceptions = new ArrayList<>();
+    Set<String> set = Collections.synchronizedSet(new HashSet<>());
+    List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
 
     // When
     try (ThreadsCollider threadsCollider =    // use try-with-resources to automatically shutdown threads collider
              threadsCollider()
-                 .withAvailableProcessors()        // preferred; or withThreadsCount(CUSTOM_THREADS_COUNT)
-                 .withThreadsExceptionsConsumer(exceptions::add) // optional threads exceptions consumer, default do nothing
-                 .withAwaitTerminationTimeout(10)  // optional, default 60 seconds
-                 .asSeconds()                      // optional - related only to "withAwaitTerminationTimeout()", default TimeUnit.SECONDS
-                 .build()) {
+                 .withAction(() -> set.add("foo"))    // action to be executed simultaneously
+                 .times(Processors.ALL)   // run action on all available processors
+                 .withThreadsExceptionsConsumer(exceptions::add)  // save threads exceptions, default consumer do nothing
+                 .withAwaitTerminationTimeout(
+                     100)    // threads collider will wait 100 milliseconds for threads to finish, default 60 seconds
+                 .asMilliseconds()
+                 .build()) {  // build threads collider
 
-        threadsCollider.collide(
-            () -> uniqueApples.add(RED_DELICIOUS)); // <-- code to be executed simultaneously at "exactly" same moment
+        threadsCollider.collide();  // code to be executed simultaneously at "exactly" same moment
     }
 
     // Then
-    then(uniqueApples).hasSize(1).containsExactlyInAnyOrder(RED_DELICIOUS);
+    then(set).hasSize(1).containsExactly("foo");
 }
 ```
 
 #### Multiple actions
 
-- When you need to execute multiple different actions simultaneously, you can use `MultiThreadsCollider` instead
-  of `ThreadsCollider`.
 - We have thread safe `Counter` class:
 
 ```java
@@ -122,42 +125,51 @@ public class Counter {
 }
 ```
 
-```java
-private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
+> **_NOTE:_** Change `counter` field to `int` to manifest concurrency issues.
 
-@RepeatedTest(10) // run test multiple times to increase chance of manifesting concurrency issues
+```java
+
+@RepeatedTest(10)
+    // run test multiple times to increase chance of manifesting concurrency issues
 void Thread_safe_counter() {
     // Given
     Counter counter = new Counter();
     List<Exception> exceptions = new ArrayList<>();
 
     // When
-    try (MultiThreadsCollider threadsCollider =
-             multiThreadsCollider()
+    try (ThreadsCollider threadsCollider =
+             threadsCollider()
                  .withAction(counter::increment)    // first  action to be executed simultaneously
-                 .times(ACTION_THREADS_COUNT)       // set number of threads to execute first action
+                 .times(Processors.HALF)            // run on half of available processors
                  .withAction(counter::decrement)    // second action to be executed simultaneously
-                 .times(ACTION_THREADS_COUNT)       // set number of threads to execute second action
-                 .withThreadsExceptionsConsumer(exceptions::add)    // optional threads exceptions consumer, default do nothing
+                 .times(Processors.HALF)            // run on half of available processors
+                 .withThreadsExceptionsConsumer(exceptions::add)    // save threads exceptions
                  .build()) {
 
         threadsCollider.collide();
     }
 
     // Then
-    then(counter.value()).isZero();
-    then(exceptions).isEmpty();
+    then(counter.value()).isZero();   // counter should be zero after all threads finish
+    then(exceptions).isEmpty();       // no exceptions should be thrown during threads execution
 }
 ```
 
-> **_NOTE:_**  Although `withThreadsExceptionsConsumer()` method is optional, it is recommended to use it in assertions to be
-> sure that no exceptions were thrown during threads execution.
+> **_NOTE:_**  It is recommended to set threads exceptions consumer using `withThreadsExceptionsConsumer()` method to be sure
+> that no exceptions were thrown during threads execution.
 
 #### Detailed examples:
 
-- [ThreadsCollider_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2FThreadsCollider_Scenarios.java)
-- [UseCases_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2FUseCases_Scenarios.java)
-- [MultiThreadsCollider_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fmulti%2FMultiThreadsCollider_Scenarios.java)
+- Single action
+    - [UseCases_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fsingle%2FUseCases_Scenarios.java)
+    - [ThreadsCollider_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fsingle%2FThreadsCollider_Scenarios.java)
+
+- Multiple actions
+    - [UseCases_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fmulti%2FUseCases_Scenarios.java)
+    - [ThreadsCollider_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fmulti%2FThreadsCollider_Scenarios.java)
+
+- Deadlocks
+    - [Deadlock_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fmulti%2FDeadlock_Scenarios.java)
 
 ## Requirements
 

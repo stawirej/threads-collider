@@ -23,10 +23,17 @@ final class UseCases_Scenarios {
   void Thread_safe_adding_to_set() {
     // Given
     Set<String> set = Collections.synchronizedSet(new HashSet<>());
+    List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
 
     // When
     try (ThreadsCollider threadsCollider =
-        threadsCollider().withAction(() -> set.add("foo")).times(Processors.ALL).build()) {
+        threadsCollider()
+            .withAction(() -> set.add("foo"))
+            .times(Processors.ALL)
+            .withThreadsExceptionsConsumer(exceptions::add)
+            .withAwaitTerminationTimeout(100)
+            .asMilliseconds()
+            .build()) {
 
       threadsCollider.collide();
     }
@@ -39,7 +46,6 @@ final class UseCases_Scenarios {
   void Thread_safe_adding_to_list() {
     // Given
     List<String> list = Collections.synchronizedList(new ArrayList<>());
-    int threadsCount = Runtime.getRuntime().availableProcessors();
 
     // When
     try (ThreadsCollider threadsCollider =
@@ -49,7 +55,7 @@ final class UseCases_Scenarios {
     }
 
     // Then
-    then(list).hasSize(threadsCount).containsOnly("bar");
+    then(list).hasSize(Processors.ALL).containsOnly("bar");
   }
 
   @RepeatedTest(10)

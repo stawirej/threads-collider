@@ -8,13 +8,12 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.RepeatedTest;
+import pl.amazingcode.threadscollider.Processors;
 import pl.amazingcode.threadscollider.ThreadsCollider;
 import pl.amazingcode.threadscollider.fixtures.Counter;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 final class UseCases_Scenarios {
-
-  private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
 
   @RepeatedTest(10)
   void Thread_safe_counter() {
@@ -26,9 +25,9 @@ final class UseCases_Scenarios {
     try (ThreadsCollider threadsCollider =
         threadsCollider()
             .withAction(counter::increment)
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withAction(counter::decrement)
-            .times(ACTION_THREADS_COUNT)
+            .times(Processors.HALF)
             .withThreadsExceptionsConsumer(exceptions::add)
             .build()) {
 
