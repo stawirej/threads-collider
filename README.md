@@ -67,9 +67,9 @@ void Thread_safe_adding_to_list() {
 }
 ```
 
-### Usage
+## Usage
 
-#### Single action
+### Single action
 
 - You can create `ThreadsCollider` using `ThreadsColliderBuilder`.
 - Use `junit5` `@RepeatedTest` annotation to run test multiple times to increase chance of manifesting concurrency issues.
@@ -101,7 +101,7 @@ void Thread_safe_adding_to_set() {
 }
 ```
 
-#### Multiple actions
+### Multiple actions
 
 - We have thread safe `Counter` class:
 
@@ -157,7 +157,7 @@ void Thread_safe_counter() {
 > **_NOTE:_**  It is recommended to set threads exceptions consumer using `withThreadsExceptionsConsumer()` method to be sure
 > that no exceptions were thrown during threads execution.
 
-#### Deadlocks
+### Deadlocks
 
 - We have two methods that are updating two lists:
 
@@ -230,7 +230,7 @@ Deadlocked threads: [
 ]
 ```
 
-#### Detailed examples:
+### Detailed examples:
 
 - Single action
     - [UseCases_Scenarios.java](src%2Ftest%2Fjava%2Fpl%2Famazingcode%2Fthreadscollider%2Fsingle%2FUseCases_Scenarios.java)
