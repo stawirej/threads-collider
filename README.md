@@ -1,7 +1,7 @@
 ## About
 
 `Threads Collider` attempts to execute a desired action on multiple threads at the "exactly" same moment to increase the
-chances of manifesting issues caused by a race condition.
+chances of manifesting issues caused by a race condition or a deadlock.
 
 ## Overview
 
