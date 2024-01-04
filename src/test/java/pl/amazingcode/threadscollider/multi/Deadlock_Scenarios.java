@@ -29,58 +29,6 @@ final class Deadlock_Scenarios {
     return Runtime.getRuntime().availableProcessors() >= 8;
   }
 
-  private void update1(List<Integer> list1, List<Integer> list2) {
-
-    synchronized (list1) {
-      list1.add(1);
-      synchronized (list2) {
-        list2.add(1);
-      }
-    }
-  }
-
-  private void update2(List<Integer> list2, List<Integer> list1) {
-
-    synchronized (list2) {
-      list2.add(1);
-      synchronized (list1) {
-        list1.add(1);
-      }
-    }
-  }
-
-  private void update1WithLocks(List<Integer> list1, List<Integer> list2) {
-
-    lock1.lock();
-    try {
-      list1.add(1);
-      lock2.lock();
-      try {
-        list2.add(1);
-      } finally {
-        lock2.unlock();
-      }
-    } finally {
-      lock1.unlock();
-    }
-  }
-
-  private void update2WithLocks(List<Integer> list2, List<Integer> list1) {
-
-    lock2.lock();
-    try {
-      list2.add(1);
-      lock1.lock();
-      try {
-        list1.add(1);
-      } finally {
-        lock1.unlock();
-      }
-    } finally {
-      lock2.unlock();
-    }
-  }
-
   @BeforeEach
   void setUp() {
     list1 = new ArrayList<>();
@@ -115,6 +63,26 @@ final class Deadlock_Scenarios {
     then(exceptions).isEmpty();
   }
 
+  private void update1(List<Integer> list1, List<Integer> list2) {
+
+    synchronized (list1) {
+      list1.add(1);
+      synchronized (list2) {
+        list2.add(1);
+      }
+    }
+  }
+
+  private void update2(List<Integer> list2, List<Integer> list1) {
+
+    synchronized (list2) {
+      list2.add(1);
+      synchronized (list1) {
+        list1.add(1);
+      }
+    }
+  }
+
   @Disabled
   @RepeatedTest(10)
   @EnabledIf("enoughProcessorCores")
@@ -139,5 +107,37 @@ final class Deadlock_Scenarios {
 
     // Then
     then(exceptions).isEmpty();
+  }
+
+  private void update1WithLocks(List<Integer> list1, List<Integer> list2) {
+
+    lock1.lock();
+    try {
+      list1.add(1);
+      lock2.lock();
+      try {
+        list2.add(1);
+      } finally {
+        lock2.unlock();
+      }
+    } finally {
+      lock1.unlock();
+    }
+  }
+
+  private void update2WithLocks(List<Integer> list2, List<Integer> list1) {
+
+    lock2.lock();
+    try {
+      list2.add(1);
+      lock1.lock();
+      try {
+        list1.add(1);
+      } finally {
+        lock1.unlock();
+      }
+    } finally {
+      lock2.unlock();
+    }
   }
 }

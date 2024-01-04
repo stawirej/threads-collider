@@ -11,6 +11,7 @@ class Action {
 
   private final int times;
 
+  @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   private Action(Runnable runnable, Optional<String> actionName, int times) {
 
     this.runnable = runnable;
@@ -20,8 +21,12 @@ class Action {
 
   static Action of(Runnable runnable, String actionName, int times) {
 
+    if (runnable == null) {
+      throw new NullPointerException("Action runnable cannot be null.");
+    }
+
     if (times < 1) {
-      throw new IllegalArgumentException("Repeat action at least once.");
+      throw InvalidActionRepetitionCount.of(times);
     }
 
     return new Action(runnable, Optional.ofNullable(actionName), times);

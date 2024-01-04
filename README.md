@@ -125,7 +125,7 @@ public class Counter {
 ```java
 private static final int ACTION_THREADS_COUNT = Runtime.getRuntime().availableProcessors() / 2;
 
-@RepeatedTest(10)   // run test multiple times to increase chance of manifesting concurrency issues
+@RepeatedTest(10) // run test multiple times to increase chance of manifesting concurrency issues
 void Thread_safe_counter() {
     // Given
     Counter counter = new Counter();
@@ -184,11 +184,3 @@ void Thread_safe_counter() {
 ```groovy
 testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.2"
 ```
-
-### TODO
-
-- [ ] Add deadlock detection for ThreadCollider
-- [ ] Update javadocs for timeout methods for ThreadsCollider
-- [ ] Check negative times method arguments
-- [ ] Check processors count
-- [ ] Thread factory to commons
