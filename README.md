@@ -89,8 +89,7 @@ void Thread_safe_adding_to_set() {
                  .withAction(() -> set.add("foo"))    // action to be executed simultaneously
                  .times(Processors.ALL)   // run action on all available processors
                  .withThreadsExceptionsConsumer(exceptions::add)  // save threads exceptions, default consumer do nothing
-                 .withAwaitTerminationTimeout(
-                     100)    // threads collider will wait 100 milliseconds for threads to finish, default 60 seconds
+                 .withAwaitTerminationTimeout(100)    // threads collider will wait 100 milliseconds for threads to finish, default 60 seconds
                  .asMilliseconds()
                  .build()) {  // build threads collider
 
@@ -157,6 +156,79 @@ void Thread_safe_counter() {
 
 > **_NOTE:_**  It is recommended to set threads exceptions consumer using `withThreadsExceptionsConsumer()` method to be sure
 > that no exceptions were thrown during threads execution.
+
+#### Deadlocks
+
+- We have two methods that are updating two lists:
+
+```java
+void update1(List<Integer> list1, List<Integer> list2) {
+
+    synchronized (list1) {
+        list1.add(1);
+        synchronized (list2) {
+            list2.add(1);
+        }
+    }
+}
+```
+
+```java
+void update2(List<Integer> list2, List<Integer> list1) {
+
+    synchronized (list2) {
+        list2.add(1);
+        synchronized (list1) {
+            list1.add(1);
+        }
+    }
+}
+```
+
+- We want to execute both methods simultaneously to manifest a deadlock:
+
+```java
+
+@RepeatedTest(10)
+void Detect_deadlock() {
+    // Given
+    List<Exception> exceptions = new ArrayList<>();
+
+    // When
+    try (ThreadsCollider collider =
+             threadsCollider()
+                 .withAction(() -> update1(list1, list2), "update1") // add action name for better logs readability
+                 .times(Processors.HALF)
+                 .withAction(() -> update2(list2, list1), "update2") // add action name for better logs readability
+                 .times(Processors.HALF)
+                 .withThreadsExceptionsConsumer(exceptions::add)
+                 .withAwaitTerminationTimeout(100)
+                 .asMilliseconds()
+                 .build()) {
+
+        collider.collide();
+    }
+
+    // Then
+    then(exceptions).isEmpty();
+}
+```
+
+- Some tests will fail with following message:
+
+```bash
+java.lang.AssertionError: 
+Expecting empty but was: [pl.amazingcode.threadscollider.UnfinishedThreads: 
+There are threads that have not completed within the specified timeout: 100 MILLISECONDS
+Check if there are any deadlocks and fix them. 
+If there are no deadlocks, increase timeout.
+Deadlocked threads: [
+"collider-pool-thread-2 [update1]" daemon prio=5 Id=24 BLOCKED on java.util.ArrayList@6c6cb480 owned by "collider-pool-thread-3 [update2]" Id=25
+
+"collider-pool-thread-3 [update2]" daemon prio=5 Id=25 BLOCKED on java.util.ArrayList@3eb738bb owned by "collider-pool-thread-2 [update1]" Id=24
+
+]
+```
 
 #### Detailed examples:
 
