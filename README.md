@@ -201,7 +201,7 @@ void Detect_deadlock() {
                  .times(Processors.HALF)
                  .withAction(() -> update2(list2, list1), "update2") // add action name for better logs readability
                  .times(Processors.HALF)
-                 .withThreadsExceptionsConsumer(exceptions::add)
+                 .withThreadsExceptionsConsumer(exceptions::add)     // save threads exceptions
                  .withAwaitTerminationTimeout(100)
                  .asMilliseconds()
                  .build()) {
