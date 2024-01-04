@@ -258,7 +258,7 @@ Deadlocked threads: [
 <dependency>
     <groupId>pl.amazingcode</groupId>
     <artifactId>threads-collider</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -266,5 +266,5 @@ Deadlocked threads: [
 ### Gradle
 
 ```groovy
-testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.2"
+testImplementation group: 'pl.amazingcode', name: 'threads-collider', version: "1.0.3"
 ```
